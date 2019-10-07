@@ -1,0 +1,5 @@
+/.vs/*
+/DevGate.Data/bin/*
+/DevGate.Data/obj/*
+/DevGate.Data.Tests/bin/*
+/DevGate.Data.Tests/obj/*
