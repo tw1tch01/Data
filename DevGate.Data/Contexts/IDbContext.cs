@@ -14,7 +14,7 @@ namespace DevGate.Data.Contexts
 		/// <summary>
 		/// Provides information and operations for the entity instances this context is tracking.
 		/// </summary>
-		ChangeTracker ContextTracker { get; }
+		ChangeTracker ChangeTracker { get; }
 
 		/// <summary>
 		/// Saves the <see cref="DbContext" /> changes

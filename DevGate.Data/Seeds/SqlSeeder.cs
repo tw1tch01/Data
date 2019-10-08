@@ -10,6 +10,10 @@ using Microsoft.Extensions.Logging;
 
 namespace DevGate.Data.Seeds
 {
+	/// <summary>
+	/// Sql seeder instance
+	/// </summary>
+	/// <typeparam name="TContext"></typeparam>
 	public class SqlSeeder<TContext> : IDbContextSeeder<TContext> where TContext : DbContext, IDbContext
 	{
 		#region Fields
@@ -24,6 +28,10 @@ namespace DevGate.Data.Seeds
 
 		#region Constructor
 
+		/// <summary>
+		/// Default constructor
+		/// </summary>
+		/// <param name="options"></param>
 		public SqlSeeder(SqlSeederOptions<TContext> options)
 		{
 			_assembly = options.Assembly;
@@ -34,8 +42,15 @@ namespace DevGate.Data.Seeds
 
 		#endregion Constructor
 
+		/// <summary>
+		/// Gets the number of scripts executed during the migration
+		/// </summary>
 		public IReadOnlyDictionary<string, int> Executions => _executions;
 
+		/// <summary>
+		/// Seed the ob
+		/// </summary>
+		/// <param name="context"></param>
 		public void Seed(TContext context)
 		{
 			_logger.LogInformation($"Retrieving scripts: [{string.Join(",", _fileSuffixes)}]");
@@ -44,13 +59,27 @@ namespace DevGate.Data.Seeds
 			{
 				var scripts = GetScripts(suffix);
 
+				var i = 1;
 				foreach (var script in scripts)
 				{
+					var scriptName = script.Key;
 
+					_logger.LogInformation($"Executing part {i} of {scriptName}");
+					if (_executions.TryGetValue(scriptName, out int count))
+						_executions[scriptName] = ++count;
+					else
+						_executions.Add(scriptName, 1);
+
+					context.Database.ExecuteSqlRaw(script.Value);
 				}
 			});
 		}
 
+		/// <summary>
+		/// Returns all script contents from files that match the specified suffix
+		/// </summary>
+		/// <param name="suffix"></param>
+		/// <returns></returns>
 		internal IDictionary<string, string> GetScripts(string suffix)
 		{
 			if (string.IsNullOrWhiteSpace(suffix)) throw new ArgumentNullException(nameof(suffix));
@@ -59,15 +88,18 @@ namespace DevGate.Data.Seeds
 
 			_assembly.GetManifestResourceNames().Where(mr => mr.EndsWith(suffix, StringComparison.OrdinalIgnoreCase)).ToList().ForEach(manifest =>
 			{
-				using (var reader = new StreamReader(_assembly.GetManifestResourceStream(manifest)))
-				{
-					SplitSqlCode(reader.ReadToEnd()).ToList().ForEach(commands => scriptWithContent.Add(manifest, commands));
-				}
+				using var reader = new StreamReader(_assembly.GetManifestResourceStream(manifest));
+				SplitSqlCode(reader.ReadToEnd()).ToList().ForEach(commands => scriptWithContent.Add(manifest, commands));
 			});
 
 			return scriptWithContent;
 		}
 
+		/// <summary>
+		/// Split SQL cod
+		/// </summary>
+		/// <param name="sql"></param>
+		/// <returns></returns>
 		internal ICollection<string> SplitSqlCode(string sql)
 		{
 			if (string.IsNullOrWhiteSpace(_scriptSeparator)) return new List<string> { sql };
@@ -76,34 +108,6 @@ namespace DevGate.Data.Seeds
 						.Where(b => b.Trim().Length > 0)
 						.Select(b => b.Trim())
 						.ToList();
-		}
-	}
-
-	public class SqlSeederOptions<TContext> : IDbContextSeederOptions<TContext> where TContext : DbContext, IDbContext
-	{
-		public Assembly Assembly { get; set; }
-
-		public ILogger Logger { get; set; }
-
-		public string ScriptSeparator { get; set; } = Constants.Separator;
-
-		public ICollection<string> FileSuffixes { get; set; } = DefaultSqlFileSuffixes();
-
-		private static ICollection<string> DefaultSqlFileSuffixes()
-		{
-			return new List<string>
-			{
-				".synonym.sql",
-				".view.sql",
-				".procedure.sql",
-				".function.sql",
-				".ddltrigger.sql",
-			};
-		}
-
-		private class Constants
-		{
-			public const string Separator = "GO";
 		}
 	}
 }

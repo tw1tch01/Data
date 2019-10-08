@@ -2,6 +2,9 @@
 
 namespace DevGate.Data.Migrations
 {
+	/// <summary>
+	/// Migration methods
+	/// </summary>
 	public interface IMigratable
 	{
 		/// <summary>

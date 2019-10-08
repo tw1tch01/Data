@@ -4,12 +4,47 @@
         <name>DevGate.Data</name>
     </assembly>
     <members>
+        <member name="T:DevGate.Data.Constants.Sql">
+            <summary>
+            Constants for SQL Seeder
+            </summary>
+        </member>
+        <member name="T:DevGate.Data.Constants.Sql.Suffixes">
+            <summary>
+            File suffixes
+            </summary>
+        </member>
+        <member name="F:DevGate.Data.Constants.Sql.Suffixes.Functions">
+            <summary>
+            Functions
+            </summary>
+        </member>
+        <member name="F:DevGate.Data.Constants.Sql.Suffixes.Procudures">
+            <summary>
+            Procudures
+            </summary>
+        </member>
+        <member name="F:DevGate.Data.Constants.Sql.Suffixes.Synonyms">
+            <summary>
+            Synonyms
+            </summary>
+        </member>
+        <member name="F:DevGate.Data.Constants.Sql.Suffixes.Triggers">
+            <summary>
+            Triggers
+            </summary>
+        </member>
+        <member name="F:DevGate.Data.Constants.Sql.Suffixes.Views">
+            <summary>
+            Views
+            </summary>
+        </member>
         <member name="T:DevGate.Data.Contexts.IDbContext">
             <summary>
             Represents an context controlling interface for <see cref="T:Microsoft.EntityFrameworkCore.DbContext"/>
             </summary>
         </member>
-        <member name="P:DevGate.Data.Contexts.IDbContext.ContextTracker">
+        <member name="P:DevGate.Data.Contexts.IDbContext.ChangeTracker">
             <summary>
             Provides information and operations for the entity instances this context is tracking.
             </summary>
@@ -27,6 +62,94 @@
             </summary>
             <typeparam name="TEntity">Entity type in the set</typeparam>
             <returns>Set of given entity type</returns>
+        </member>
+        <member name="T:DevGate.Data.Entities.Audits.ICreated">
+            <summary>
+            Represents required fields for a creatable-audit entity
+            </summary>
+        </member>
+        <member name="P:DevGate.Data.Entities.Audits.ICreated.CreatedBy">
+            <summary>
+            Who created the entity
+            </summary>
+        </member>
+        <member name="P:DevGate.Data.Entities.Audits.ICreated.CreatedOn">
+            <summary>
+            When the entity was created
+            </summary>
+        </member>
+        <member name="M:DevGate.Data.Entities.Audits.ICreated.Create(System.String,System.DateTime)">
+            <summary>
+            Set the audit fields after the entity is created
+            </summary>
+            <param name="createdBy"><see cref="P:DevGate.Data.Entities.Audits.ICreated.CreatedBy"/></param>
+            <param name="createdOn"><see cref="P:DevGate.Data.Entities.Audits.ICreated.CreatedOn"/></param>
+        </member>
+        <member name="T:DevGate.Data.Entities.Audits.IUpdated">
+            <summary>
+            Represents required fields for an updatable-audit entity
+            </summary>
+        </member>
+        <member name="P:DevGate.Data.Entities.Audits.IUpdated.UpdatedBy">
+            <summary>
+            Who updated the entity
+            </summary>
+        </member>
+        <member name="P:DevGate.Data.Entities.Audits.IUpdated.UpdatedOn">
+            <summary>
+            When the entity was updated
+            </summary>
+            <remarks>If property is null, entity has NOT been updated</remarks>
+        </member>
+        <member name="M:DevGate.Data.Entities.Audits.IUpdated.Update(System.String,System.DateTime)">
+            <summary>
+            Set the audit fields after the entity is updated
+            </summary>
+            <param name="updatedBy"><see cref="P:DevGate.Data.Entities.Audits.IUpdated.UpdatedBy"/></param>
+            <param name="updatedOn"><see cref="P:DevGate.Data.Entities.Audits.IUpdated.UpdatedOn"/></param>
+        </member>
+        <member name="T:DevGate.Data.Entities.BaseEntity">
+            <summary>
+            Represents the abstract class that all entities should inherit from
+            </summary>
+        </member>
+        <member name="T:DevGate.Data.Entities.NonDeletableEntity">
+            <summary>
+            Represents a non-deletable entity
+            </summary>
+        </member>
+        <member name="P:DevGate.Data.Entities.NonDeletableEntity.DeletedBy">
+            <summary>
+            Who "deleted" the entity
+            </summary>
+        </member>
+        <member name="P:DevGate.Data.Entities.NonDeletableEntity.DeletedOn">
+            <summary>
+            When the entity was "deleteD"
+            </summary>
+            <remarks>If value is null, entity has NOT been deleted</remarks>
+        </member>
+        <member name="P:DevGate.Data.Entities.NonDeletableEntity.IsDeleted">
+            <summary>
+            Indication of whether the entity has been "soft" deleted
+            </summary>
+        </member>
+        <member name="P:DevGate.Data.Entities.NonDeletableEntity.IsDeletable">
+            <summary>
+            Ensures the entity cannot be deleted
+            </summary>
+        </member>
+        <member name="M:DevGate.Data.Entities.NonDeletableEntity.Delete(System.String,System.DateTime)">
+            <summary>
+            Sets the audit fields, after the entity is soft "deleted"
+            </summary>
+            <param name="deletedBy"></param>
+            <param name="deletedOn"></param>
+        </member>
+        <member name="M:DevGate.Data.Entities.NonDeletableEntity.Restore">
+            <summary>
+            Unsets the audit fields to restore an entity
+            </summary>
         </member>
         <member name="T:DevGate.Data.Extensions.Services.ServiceCollectionExtensions">
             <summary>
@@ -98,6 +221,11 @@
             <param name="services"></param>
             <returns></returns>
         </member>
+        <member name="T:DevGate.Data.Migrations.IMigratable">
+            <summary>
+            Migration methods
+            </summary>
+        </member>
         <member name="M:DevGate.Data.Migrations.IMigratable.Migrate(System.IServiceProvider)">
             <summary>
             Performs a migration on the object using the specified service provider
@@ -109,6 +237,38 @@
             Performs a database seed ob the object using the service provider
             </summary>
             <param name="services"></param>
+        </member>
+        <member name="T:DevGate.Data.Migrations.Migratable`1">
+            <summary>
+            Migratable object
+            </summary>
+        </member>
+        <member name="M:DevGate.Data.Migrations.Migratable`1.Migrate(System.IServiceProvider)">
+            <summary>
+            Migrate the object using the <see cref="T:System.IServiceProvider"/>
+            </summary>
+            <param name="services"></param>
+        </member>
+        <member name="M:DevGate.Data.Migrations.Migratable`1.SeedDatabase(System.IServiceProvider)">
+            <summary>
+            Seeds the object using the <see cref="T:System.IServiceProvider"/>
+            </summary>
+            <param name="services"></param>
+        </member>
+        <member name="T:DevGate.Data.Other.AuditFields">
+            <summary>
+            Retrieve all audit types and their respective fields
+            </summary>
+        </member>
+        <member name="M:DevGate.Data.Other.AuditFields.#ctor">
+            <summary>
+            Initializes new instance of <see cref="T:DevGate.Data.Other.AuditFields"/>
+            </summary>
+        </member>
+        <member name="P:DevGate.Data.Other.AuditFields.Fields">
+            <summary>
+            Dictionary of audit types and their respective fields
+            </summary>
         </member>
         <member name="T:DevGate.Data.Repositories.EntityRepository`1">
             <summary>
@@ -271,8 +431,8 @@
             </summary>
             <typeparam name="TEntity">Entity types</typeparam>
             <param name="entities">Collection of entity objects</param>
-            <param name="createdBy">Who created the entity</param>
-            <param name="createdOn">When the entity was created</param>
+            <param name="createdBy"><see cref="P:DevGate.Data.Entities.Audits.ICreated.CreatedBy"/></param>
+            <param name="createdOn"><see cref="P:DevGate.Data.Entities.Audits.ICreated.CreatedOn"/></param>
             <returns>Repository instance</returns>
         </member>
         <member name="M:DevGate.Data.Repositories.IEntityRepository`1.AddAsync``1(``0)">
@@ -289,13 +449,13 @@
             </summary>
             <typeparam name="TEntity">Entity type</typeparam>
             <param name="entity">Entity object</param>
-            <param name="createdBy">Who created the entity</param>
-            <param name="createdOn">When the entity was created</param>
+            <param name="createdBy"><see cref="P:DevGate.Data.Entities.Audits.ICreated.CreatedBy"/></param>
+            <param name="createdOn"><see cref="P:DevGate.Data.Entities.Audits.ICreated.CreatedOn"/></param>
             <returns>Repository instance</returns>
         </member>
         <member name="M:DevGate.Data.Repositories.IEntityRepository`1.Attach``1(``0)">
             <summary>
-            Attach the entities to the <see cref="!:TContext"/>
+            Attach the entities to the <see cref="T:DevGate.Data.Contexts.IDbContext"/>
             </summary>
             <typeparam name="TEntity">Entity type</typeparam>
             <param name="entity">Entity object</param>
@@ -303,7 +463,7 @@
         </member>
         <member name="M:DevGate.Data.Repositories.IEntityRepository`1.Attach``1(System.Collections.Generic.ICollection{``0})">
             <summary>
-            Attach the entities to the <see cref="!:TContext"/>
+            Attach the entities to the <see cref="T:DevGate.Data.Contexts.IDbContext"/>
             </summary>
             <typeparam name="TEntity">Entity type</typeparam>
             <param name="entities">Collection of entity objects</param>
@@ -330,6 +490,7 @@
             Retrieves a list of entities from the <see cref="T:DevGate.Data.Contexts.IDbContext"/> based on the query <see cref="T:DevGate.Data.Specifications.Specification`1"/>
             </summary>
             <typeparam name="TEntity">Entity type</typeparam>
+            <typeparam name="TResult">Result type</typeparam>
             <param name="specification">Entity specification</param>
             <param name="parameters">Query paramaters</param>
             <returns>Parameter results</returns>
@@ -344,12 +505,12 @@
         </member>
         <member name="M:DevGate.Data.Repositories.IEntityRepository`1.Remove``1(``0,System.String,System.DateTime)">
             <summary>
-            Soft deletes the <see cref="T:DevGate.Data.Entities.NonDeletableEntity"/> by setting the property <see cref="!:NonDeletableEntity.IsRemoved"/> true, and sets the audit fields
+            Soft deletes the <see cref="T:DevGate.Data.Entities.NonDeletableEntity"/> by setting the property <see cref="P:DevGate.Data.Entities.NonDeletableEntity.IsDeleted"/> true, and sets the audit fields
             </summary>
             <typeparam name="TEntity">Entity type</typeparam>
             <param name="entity">Entity object</param>
-            <param name="deletedBy">Who deleted the entity</param>
-            <param name="deletedOn">When was the entity deleted</param>
+            <param name="deletedBy"><see cref="P:DevGate.Data.Entities.NonDeletableEntity.DeletedBy"/></param>
+            <param name="deletedOn"><see cref="P:DevGate.Data.Entities.NonDeletableEntity.DeletedOn"/></param>
             <returns>Repository instance</returns>
         </member>
         <member name="M:DevGate.Data.Repositories.IEntityRepository`1.Remove``1(System.Collections.Generic.ICollection{``0})">
@@ -362,12 +523,12 @@
         </member>
         <member name="M:DevGate.Data.Repositories.IEntityRepository`1.Remove``1(System.Collections.Generic.ICollection{``0},System.String,System.DateTime)">
             <summary>
-            Soft deletes a collection of <see cref="T:DevGate.Data.Entities.NonDeletableEntity"/> by setting the property <see cref="!:NonDeletableEntity.IsRemoved"/> true, and sets the audit fields
+            Soft deletes a collection of <see cref="T:DevGate.Data.Entities.NonDeletableEntity"/> by setting the property <see cref="P:DevGate.Data.Entities.NonDeletableEntity.IsDeleted"/> true, and sets the audit fields
             </summary>
             <typeparam name="TEntity">Entity type</typeparam>
             <param name="entities">Collection of entity objects</param>
-            <param name="deletedBy">Who soft deleted the entities</param>
-            <param name="deletedOn">When the entities were soft deleted</param>
+            <param name="deletedBy"><see cref="P:DevGate.Data.Entities.NonDeletableEntity.DeletedBy"/></param>
+            <param name="deletedOn"><see cref="P:DevGate.Data.Entities.NonDeletableEntity.DeletedOn"/></param>
             <returns>Repository instance</returns>
         </member>
         <member name="M:DevGate.Data.Repositories.IEntityRepository`1.SaveAsync">
@@ -398,6 +559,8 @@
             </summary>
             <typeparam name="TEntity">Entity type</typeparam>
             <param name="entity">Entity object</param>
+            <param name="updatedBy"><see cref="P:DevGate.Data.Entities.Audits.IUpdated.UpdatedBy"/></param>
+            <param name="updatedOn"><see cref="P:DevGate.Data.Entities.Audits.IUpdated.UpdatedOn"/></param>
             <returns>Repository instance</returns>
         </member>
         <member name="M:DevGate.Data.Repositories.IEntityRepository`1.Update``1(System.Collections.Generic.ICollection{``0})">
@@ -414,8 +577,8 @@
             </summary>
             <typeparam name="TEntity">Entity type</typeparam>
             <param name="entities">Collection of entity objects</param>
-            <param name="updatedBy">Who updated the entities</param>
-            /// <param name="updatedBy">When the entities were updated</param>
+            <param name="updatedBy"><see cref="P:DevGate.Data.Entities.Audits.IUpdated.UpdatedBy"/></param>
+            <param name="updatedOn"><see cref="P:DevGate.Data.Entities.Audits.IUpdated.UpdatedOn"/></param>
             <returns>Repository instance</returns>
         </member>
         <member name="T:DevGate.Data.Seeds.IDbContextSeeder`1">
@@ -450,6 +613,229 @@
             <summary>
             Logger to be used by the context seeder
             </summary>
+        </member>
+        <member name="T:DevGate.Data.Seeds.SqlSeeder`1">
+            <summary>
+            Sql seeder instance
+            </summary>
+            <typeparam name="TContext"></typeparam>
+        </member>
+        <member name="M:DevGate.Data.Seeds.SqlSeeder`1.#ctor(DevGate.Data.Seeds.SqlSeederOptions{`0})">
+            <summary>
+            Default constructor
+            </summary>
+            <param name="options"></param>
+        </member>
+        <member name="P:DevGate.Data.Seeds.SqlSeeder`1.Executions">
+            <summary>
+            Gets the number of scripts executed during the migration
+            </summary>
+        </member>
+        <member name="M:DevGate.Data.Seeds.SqlSeeder`1.Seed(`0)">
+            <summary>
+            Seed the ob
+            </summary>
+            <param name="context"></param>
+        </member>
+        <member name="M:DevGate.Data.Seeds.SqlSeeder`1.GetScripts(System.String)">
+            <summary>
+            Returns all script contents from files that match the specified suffix
+            </summary>
+            <param name="suffix"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DevGate.Data.Seeds.SqlSeeder`1.SplitSqlCode(System.String)">
+            <summary>
+            Split SQL cod
+            </summary>
+            <param name="sql"></param>
+            <returns></returns>
+        </member>
+        <member name="T:DevGate.Data.Seeds.SqlSeederOptions`1">
+            <summary>
+            Configuration options for <see cref="T:DevGate.Data.Seeds.SqlSeeder`1"/> instance
+            </summary>
+            <typeparam name="TContext"></typeparam>
+        </member>
+        <member name="P:DevGate.Data.Seeds.SqlSeederOptions`1.Assembly">
+            <summary>
+            Gets or sets the assembly to run the seeder on
+            </summary>
+        </member>
+        <member name="P:DevGate.Data.Seeds.SqlSeederOptions`1.FileSuffixes">
+            <summary>
+            Gets or sets the list of file suffixes to look for. If not set uses internal defaults.
+            </summary>
+        </member>
+        <member name="P:DevGate.Data.Seeds.SqlSeederOptions`1.Logger">
+            <summary>
+            Gets or sets the logger to use while seeding
+            </summary>
+        </member>
+        <member name="P:DevGate.Data.Seeds.SqlSeederOptions`1.ScriptSeparator">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:DevGate.Data.Specifications.AndSpecification`1">
+            <summary>
+            Product of two (2) <see cref="T:DevGate.Data.Specifications.Specification`1"/>
+            </summary>
+            <typeparam name="TEntity"></typeparam>
+        </member>
+        <member name="M:DevGate.Data.Specifications.AndSpecification`1.#ctor(DevGate.Data.Specifications.Specification{`0},DevGate.Data.Specifications.Specification{`0})">
+            <summary>
+            Initializes a new instance of <see cref="T:DevGate.Data.Specifications.AndSpecification`1"/>
+            </summary>
+            <param name="left"></param>
+            <param name="right"></param>
+        </member>
+        <member name="M:DevGate.Data.Specifications.AndSpecification`1.ToExpression">
+            <summary>
+            Overrides base <see cref="M:DevGate.Data.Specifications.Specification`1.ToExpression"/> to return AND product of two specified <see cref="T:DevGate.Data.Specifications.Specification`1"/>
+            </summary>
+        </member>
+        <member name="T:DevGate.Data.Specifications.OrSpecification`1">
+            <summary>
+            Combination of two (2) <see cref="T:DevGate.Data.Specifications.Specification`1"/>
+            </summary>
+            <typeparam name="TEntity"></typeparam>
+        </member>
+        <member name="M:DevGate.Data.Specifications.OrSpecification`1.#ctor(DevGate.Data.Specifications.Specification{`0},DevGate.Data.Specifications.Specification{`0})">
+            <summary>
+            Initializes a new instance of <see cref="T:DevGate.Data.Specifications.OrSpecification`1"/>
+            </summary>
+            <param name="left"></param>
+            <param name="right"></param>
+        </member>
+        <member name="M:DevGate.Data.Specifications.OrSpecification`1.ToExpression">
+            <summary>
+            Overrides base <see cref="M:DevGate.Data.Specifications.Specification`1.ToExpression"/> to return OR combination of two <see cref="T:DevGate.Data.Specifications.Specification`1"/>
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:DevGate.Data.Specifications.Specification`1">
+            <summary>
+            Entity-based specifications designed after the Specification and Repository pattern, to be used with <see cref="N:Microsoft.EntityFrameworkCore"/>
+            </summary>
+            <typeparam name="TEntity"></typeparam>
+        </member>
+        <member name="P:DevGate.Data.Specifications.Specification`1.AsNoTracking">
+            <summary>
+            Indicates whether the entity is traced in the context
+            </summary>
+        </member>
+        <member name="P:DevGate.Data.Specifications.Specification`1.IsDistinct">
+            <summary>
+            Indicates whether Distinct modifier has been applied
+            </summary>
+        </member>
+        <member name="P:DevGate.Data.Specifications.Specification`1.Modifiers">
+            <summary>
+            Returns current modifiers specified on the specification
+            </summary>
+        </member>
+        <member name="P:DevGate.Data.Specifications.Specification`1.Tag">
+            <summary>
+            Tag for the specification
+            </summary>
+        </member>
+        <member name="M:DevGate.Data.Specifications.Specification`1.AddTag(System.String)">
+            <summary>
+            Add tag to specification
+            </summary>
+            <param name="tag"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DevGate.Data.Specifications.Specification`1.And(DevGate.Data.Specifications.Specification{`0})">
+            <summary>
+            Returns product of the two <see cref="T:DevGate.Data.Specifications.Specification`1"/>
+            </summary>
+            <param name="specification"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DevGate.Data.Specifications.Specification`1.Distinct">
+            <summary>
+            Adds <see cref="T:System.Linq.IQueryable`1"/> modifier to the specification that returns a distinct collection
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:DevGate.Data.Specifications.Specification`1.DistinctBy``1(System.Linq.Expressions.Expression{System.Func{`0,``0}})">
+            <summary>
+            Adds <see cref="T:System.Linq.IQueryable`1"/> modifier to the specification that returns a distinct collection based on the property
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:DevGate.Data.Specifications.Specification`1.Filter(System.Linq.IQueryable{`0})">
+            <summary>
+            Filter the provided <see cref="T:System.Linq.IQueryable`1"/> with current specifications
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DevGate.Data.Specifications.Specification`1.HasTag(System.String)">
+            <summary>
+            Indicates whether the specification has the tag
+            </summary>
+            <param name="tag"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DevGate.Data.Specifications.Specification`1.Include``1(System.Linq.Expressions.Expression{System.Func{`0,``0}})">
+            <summary>
+            Adds <see cref="T:System.Linq.IQueryable`1"/> modifier to the specification to include the property in the query result
+            </summary>
+            <typeparam name="TProperty"></typeparam>
+            <param name="property"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DevGate.Data.Specifications.Specification`1.Modify(System.Linq.IQueryable{`0})">
+            <summary>
+            Modify the provided <see cref="T:System.Linq.IQueryable`1"/> with current modifiers
+            </summary>
+            <param name="query"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DevGate.Data.Specifications.Specification`1.Or(DevGate.Data.Specifications.Specification{`0})">
+            <summary>
+            Returns combination of the two <see cref="T:DevGate.Data.Specifications.Specification`1" />
+            </summary>
+            <param name="specification"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DevGate.Data.Specifications.Specification`1.OrderBy``1(System.Linq.Expressions.Expression{System.Func{`0,``0}})">
+            <summary>
+            Adds <see cref="T:System.Linq.IQueryable`1"/> modifier to the specification that sorts the query results in ascending order
+            </summary>
+            <typeparam name="TProperty"></typeparam>
+            <param name="property"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DevGate.Data.Specifications.Specification`1.OrderByDescending``1(System.Linq.Expressions.Expression{System.Func{`0,``0}})">
+            <summary>
+            Adds <see cref="T:System.Linq.IQueryable`1"/> modifier to the specification that sorts the query results in descending order
+            </summary>
+            <typeparam name="TProperty"></typeparam>
+            <param name="expression"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DevGate.Data.Specifications.Specification`1.Satifies(`0)">
+            <summary>
+            Determines if the specification satisfies the entity
+            </summary>
+            <param name="entity"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DevGate.Data.Specifications.Specification`1.ToExpression">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:DevGate.Data.Specifications.Specification`1.WithNoTracking">
+            <summary>
+            
+            </summary>
+            <returns></returns>
         </member>
     </members>
 </doc>

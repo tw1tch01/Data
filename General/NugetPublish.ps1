@@ -17,6 +17,9 @@ $currentLocation = Get-Location
 if ($PackageLocation -ne "") {
 	Set-Location $PackageLocation
 }
+
+dotnet pack 
+
 Write-Host "Publishing package: $Package to NuGet source: $NugetSource"
 nuget push $Package -source $NugetSource 
 Set-Location $currentLocation

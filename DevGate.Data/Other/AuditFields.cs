@@ -4,12 +4,18 @@ using DevGate.Data.Entities.Audits;
 
 namespace DevGate.Data.Other
 {
+	/// <summary>
+	/// Retrieve all audit types and their respective fields
+	/// </summary>
 	public class AuditFields
 	{
 		private readonly IReadOnlyCollection<string> _createdFields;
 		private readonly IReadOnlyCollection<string> _deletedFields;
 		private readonly IReadOnlyCollection<string> _updatedFields;
 
+		/// <summary>
+		/// Initializes new instance of <see cref="AuditFields"/>
+		/// </summary>
 		public AuditFields()
 		{
 			_createdFields = new List<string> { nameof(ICreated.CreatedBy), nameof(ICreated.CreatedOn) };
@@ -17,6 +23,9 @@ namespace DevGate.Data.Other
 			_updatedFields = new List<string> { nameof(IUpdated.UpdatedBy), nameof(IUpdated.UpdatedOn) };
 		}
 
+		/// <summary>
+		/// Dictionary of audit types and their respective fields
+		/// </summary>
 		public IDictionary<string, IReadOnlyCollection<string>> Fields => new Dictionary<string, IReadOnlyCollection<string>>
 		{
 			{ nameof(ICreated.Create), _createdFields },

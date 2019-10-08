@@ -252,8 +252,8 @@ namespace DevGate.Data.Repositories
 
 			if (specification.AsNoTracking) query = query.AsNoTracking();
 
-			query = specification.ApplyFilters(query);
-			query = specification.ApplyModifiers(query);
+			query = specification.Filter(query);
+			query = specification.Modify(query);
 
 			return query;
 		}
