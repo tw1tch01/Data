@@ -210,16 +210,6 @@ namespace DevGate.Data.Specifications
 		}
 
 		/// <summary>
-		/// Determines if the specification satisfies the entity
-		/// </summary>
-		/// <param name="entity"></param>
-		/// <returns></returns>
-		public bool Satifies(TEntity entity)
-		{
-			return ToExpression().Compile()(entity);
-		}
-
-		/// <summary>
 		/// 
 		/// </summary>
 		/// <returns></returns>
