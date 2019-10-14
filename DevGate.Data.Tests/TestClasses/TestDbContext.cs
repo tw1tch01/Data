@@ -1,5 +1,5 @@
 ﻿using DevGate.Data.Contexts;
-using DevGate.Data.Entities;
+using DevGate.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace DevGate.Data.Tests.TestClasses

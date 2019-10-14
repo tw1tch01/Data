@@ -1,4 +1,4 @@
-﻿using DevGate.Data.Entities;
+﻿using DevGate.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

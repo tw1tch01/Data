@@ -6,7 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture;
 using DevGate.Data.Contexts;
-using DevGate.Data.Entities;
+using DevGate.Domain.Entities;
 using DevGate.Data.Repositories;
 using DevGate.Data.Specifications;
 using DevGate.Data.Tests.TestClasses;

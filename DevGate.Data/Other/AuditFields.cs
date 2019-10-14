@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using DevGate.Data.Entities;
-using DevGate.Data.Entities.Audits;
+using DevGate.Domain.Entities;
+using DevGate.Domain.Entities.Audits;
 
 namespace DevGate.Data.Other
 {

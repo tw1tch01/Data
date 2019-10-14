@@ -1,6 +1,6 @@
 ﻿using System;
-using DevGate.Data.Entities;
-using DevGate.Data.Entities.Audits;
+using DevGate.Domain.Entities;
+using DevGate.Domain.Entities.Audits;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

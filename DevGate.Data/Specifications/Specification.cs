@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using DevGate.Data.Entities;
+using DevGate.Domain.Entities;
 using LinqKit;
 using Microsoft.EntityFrameworkCore;
 

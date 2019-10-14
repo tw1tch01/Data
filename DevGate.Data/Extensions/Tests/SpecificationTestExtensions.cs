@@ -1,4 +1,4 @@
-﻿using DevGate.Data.Entities;
+﻿using DevGate.Domain.Entities;
 using DevGate.Data.Specifications;
 
 namespace DevGate.Data.Extensions.Tests

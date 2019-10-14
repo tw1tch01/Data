@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq.Expressions;
-using DevGate.Data.Entities;
+using DevGate.Domain.Entities;
 using LinqKit;
 
 namespace DevGate.Data.Specifications

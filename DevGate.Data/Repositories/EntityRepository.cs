@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DevGate.Data.Contexts;
-using DevGate.Data.Entities;
-using DevGate.Data.Entities.Audits;
+using DevGate.Domain.Entities;
+using DevGate.Domain.Entities.Audits;
 using DevGate.Data.Other;
 using DevGate.Data.Specifications;
 using Microsoft.EntityFrameworkCore;
@@ -150,7 +150,7 @@ namespace DevGate.Data.Repositories
 		/// </summary>
 		public Task<IEntityRepository<TContext>> Remove<TEntity>(TEntity entity) where TEntity : BaseEntity
 		{
-			if (!entity.IsDeletable) return Remove(entity as NonDeletableEntity, nameof(EntityRepository<TContext>), DateTime.UtcNow);
+			if (!entity.IsDeletable()) return Remove(entity as NonDeletableEntity, nameof(EntityRepository<TContext>), DateTime.UtcNow);
 
 			DataContext.Set<TEntity>().Remove(entity);
 			return Task.FromResult<IEntityRepository<TContext>>(this);
@@ -170,9 +170,9 @@ namespace DevGate.Data.Repositories
 		/// </summary>
 		public Task<IEntityRepository<TContext>> Remove<TEntity>(ICollection<TEntity> entities) where TEntity : BaseEntity
 		{
-			if (entities.Any(e => !e.IsDeletable)) Remove(entities.Where(e => !e.IsDeletable) as ICollection<NonDeletableEntity>, nameof(EntityRepository<TContext>), DateTime.UtcNow);
+			if (entities.Any(e => !e.IsDeletable())) Remove(entities.Where(e => !e.IsDeletable()) as ICollection<NonDeletableEntity>, nameof(EntityRepository<TContext>), DateTime.UtcNow);
 
-			DataContext.Set<TEntity>().RemoveRange(entities.Where(e => e.IsDeletable));
+			DataContext.Set<TEntity>().RemoveRange(entities.Where(e => e.IsDeletable()));
 			return Task.FromResult<IEntityRepository<TContext>>(this);
 		}
 
@@ -182,7 +182,7 @@ namespace DevGate.Data.Repositories
 		public Task<IEntityRepository<TContext>> Remove<TEntity>(ICollection<TEntity> entities, string deletedBy, DateTime deletedOn) where TEntity : NonDeletableEntity
 		{
 			Array.ForEach(entities.ToArray(), (entity) => entity.Delete(deletedBy, deletedOn));
-			DataContext.Set<TEntity>().RemoveRange(entities.Where(e => e.IsDeletable));
+			DataContext.Set<TEntity>().RemoveRange(entities.Where(e => e.IsDeletable()));
 			return Task.FromResult<IEntityRepository<TContext>>(this);
 		}
 

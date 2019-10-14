@@ -63,90 +63,90 @@
             <typeparam name="TEntity">Entity type in the set</typeparam>
             <returns>Set of given entity type</returns>
         </member>
-        <member name="T:DevGate.Data.Entities.Audits.ICreated">
+        <member name="T:DevGate.Domain.Entities.Audits.ICreated">
             <summary>
             Represents required fields for a creatable-audit entity
             </summary>
         </member>
-        <member name="P:DevGate.Data.Entities.Audits.ICreated.CreatedBy">
+        <member name="P:DevGate.Domain.Entities.Audits.ICreated.CreatedBy">
             <summary>
             Who created the entity
             </summary>
         </member>
-        <member name="P:DevGate.Data.Entities.Audits.ICreated.CreatedOn">
+        <member name="P:DevGate.Domain.Entities.Audits.ICreated.CreatedOn">
             <summary>
             When the entity was created
             </summary>
         </member>
-        <member name="M:DevGate.Data.Entities.Audits.ICreated.Create(System.String,System.DateTime)">
+        <member name="M:DevGate.Domain.Entities.Audits.ICreated.Create(System.String,System.DateTime)">
             <summary>
             Set the audit fields after the entity is created
             </summary>
-            <param name="createdBy"><see cref="P:DevGate.Data.Entities.Audits.ICreated.CreatedBy"/></param>
-            <param name="createdOn"><see cref="P:DevGate.Data.Entities.Audits.ICreated.CreatedOn"/></param>
+            <param name="createdBy"><see cref="P:DevGate.Domain.Entities.Audits.ICreated.CreatedBy"/></param>
+            <param name="createdOn"><see cref="P:DevGate.Domain.Entities.Audits.ICreated.CreatedOn"/></param>
         </member>
-        <member name="T:DevGate.Data.Entities.Audits.IUpdated">
+        <member name="T:DevGate.Domain.Entities.Audits.IUpdated">
             <summary>
             Represents required fields for an updatable-audit entity
             </summary>
         </member>
-        <member name="P:DevGate.Data.Entities.Audits.IUpdated.UpdatedBy">
+        <member name="P:DevGate.Domain.Entities.Audits.IUpdated.UpdatedBy">
             <summary>
             Who updated the entity
             </summary>
         </member>
-        <member name="P:DevGate.Data.Entities.Audits.IUpdated.UpdatedOn">
+        <member name="P:DevGate.Domain.Entities.Audits.IUpdated.UpdatedOn">
             <summary>
             When the entity was updated
             </summary>
             <remarks>If property is null, entity has NOT been updated</remarks>
         </member>
-        <member name="M:DevGate.Data.Entities.Audits.IUpdated.Update(System.String,System.DateTime)">
+        <member name="M:DevGate.Domain.Entities.Audits.IUpdated.Update(System.String,System.DateTime)">
             <summary>
             Set the audit fields after the entity is updated
             </summary>
-            <param name="updatedBy"><see cref="P:DevGate.Data.Entities.Audits.IUpdated.UpdatedBy"/></param>
-            <param name="updatedOn"><see cref="P:DevGate.Data.Entities.Audits.IUpdated.UpdatedOn"/></param>
+            <param name="updatedBy"><see cref="P:DevGate.Domain.Entities.Audits.IUpdated.UpdatedBy"/></param>
+            <param name="updatedOn"><see cref="P:DevGate.Domain.Entities.Audits.IUpdated.UpdatedOn"/></param>
         </member>
-        <member name="T:DevGate.Data.Entities.BaseEntity">
+        <member name="T:DevGate.Domain.Entities.BaseEntity">
             <summary>
             Represents the abstract class that all entities should inherit from
             </summary>
         </member>
-        <member name="T:DevGate.Data.Entities.NonDeletableEntity">
+        <member name="T:DevGate.Domain.Entities.NonDeletableEntity">
             <summary>
             Represents a non-deletable entity
             </summary>
         </member>
-        <member name="P:DevGate.Data.Entities.NonDeletableEntity.DeletedBy">
+        <member name="P:DevGate.Domain.Entities.NonDeletableEntity.DeletedBy">
             <summary>
             Who "deleted" the entity
             </summary>
         </member>
-        <member name="P:DevGate.Data.Entities.NonDeletableEntity.DeletedOn">
+        <member name="P:DevGate.Domain.Entities.NonDeletableEntity.DeletedOn">
             <summary>
             When the entity was "deleteD"
             </summary>
             <remarks>If value is null, entity has NOT been deleted</remarks>
         </member>
-        <member name="P:DevGate.Data.Entities.NonDeletableEntity.IsDeleted">
+        <member name="P:DevGate.Domain.Entities.NonDeletableEntity.IsDeleted">
             <summary>
             Indication of whether the entity has been "soft" deleted
             </summary>
         </member>
-        <member name="P:DevGate.Data.Entities.NonDeletableEntity.IsDeletable">
+        <member name="P:DevGate.Domain.Entities.NonDeletableEntity.IsDeletable">
             <summary>
             Ensures the entity cannot be deleted
             </summary>
         </member>
-        <member name="M:DevGate.Data.Entities.NonDeletableEntity.Delete(System.String,System.DateTime)">
+        <member name="M:DevGate.Domain.Entities.NonDeletableEntity.Delete(System.String,System.DateTime)">
             <summary>
             Sets the audit fields, after the entity is soft "deleted"
             </summary>
             <param name="deletedBy"></param>
             <param name="deletedOn"></param>
         </member>
-        <member name="M:DevGate.Data.Entities.NonDeletableEntity.Restore">
+        <member name="M:DevGate.Domain.Entities.NonDeletableEntity.Restore">
             <summary>
             Unsets the audit fields to restore an entity
             </summary>
@@ -431,8 +431,8 @@
             </summary>
             <typeparam name="TEntity">Entity types</typeparam>
             <param name="entities">Collection of entity objects</param>
-            <param name="createdBy"><see cref="P:DevGate.Data.Entities.Audits.ICreated.CreatedBy"/></param>
-            <param name="createdOn"><see cref="P:DevGate.Data.Entities.Audits.ICreated.CreatedOn"/></param>
+            <param name="createdBy"><see cref="P:DevGate.Domain.Entities.Audits.ICreated.CreatedBy"/></param>
+            <param name="createdOn"><see cref="P:DevGate.Domain.Entities.Audits.ICreated.CreatedOn"/></param>
             <returns>Repository instance</returns>
         </member>
         <member name="M:DevGate.Data.Repositories.IEntityRepository`1.AddAsync``1(``0)">
@@ -449,8 +449,8 @@
             </summary>
             <typeparam name="TEntity">Entity type</typeparam>
             <param name="entity">Entity object</param>
-            <param name="createdBy"><see cref="P:DevGate.Data.Entities.Audits.ICreated.CreatedBy"/></param>
-            <param name="createdOn"><see cref="P:DevGate.Data.Entities.Audits.ICreated.CreatedOn"/></param>
+            <param name="createdBy"><see cref="P:DevGate.Domain.Entities.Audits.ICreated.CreatedBy"/></param>
+            <param name="createdOn"><see cref="P:DevGate.Domain.Entities.Audits.ICreated.CreatedOn"/></param>
             <returns>Repository instance</returns>
         </member>
         <member name="M:DevGate.Data.Repositories.IEntityRepository`1.Attach``1(``0)">
@@ -505,12 +505,12 @@
         </member>
         <member name="M:DevGate.Data.Repositories.IEntityRepository`1.Remove``1(``0,System.String,System.DateTime)">
             <summary>
-            Soft deletes the <see cref="T:DevGate.Data.Entities.NonDeletableEntity"/> by setting the property <see cref="P:DevGate.Data.Entities.NonDeletableEntity.IsDeleted"/> true, and sets the audit fields
+            Soft deletes the <see cref="T:DevGate.Domain.Entities.NonDeletableEntity"/> by setting the property <see cref="P:DevGate.Domain.Entities.NonDeletableEntity.IsDeleted"/> true, and sets the audit fields
             </summary>
             <typeparam name="TEntity">Entity type</typeparam>
             <param name="entity">Entity object</param>
-            <param name="deletedBy"><see cref="P:DevGate.Data.Entities.NonDeletableEntity.DeletedBy"/></param>
-            <param name="deletedOn"><see cref="P:DevGate.Data.Entities.NonDeletableEntity.DeletedOn"/></param>
+            <param name="deletedBy"><see cref="P:DevGate.Domain.Entities.NonDeletableEntity.DeletedBy"/></param>
+            <param name="deletedOn"><see cref="P:DevGate.Domain.Entities.NonDeletableEntity.DeletedOn"/></param>
             <returns>Repository instance</returns>
         </member>
         <member name="M:DevGate.Data.Repositories.IEntityRepository`1.Remove``1(System.Collections.Generic.ICollection{``0})">
@@ -523,12 +523,12 @@
         </member>
         <member name="M:DevGate.Data.Repositories.IEntityRepository`1.Remove``1(System.Collections.Generic.ICollection{``0},System.String,System.DateTime)">
             <summary>
-            Soft deletes a collection of <see cref="T:DevGate.Data.Entities.NonDeletableEntity"/> by setting the property <see cref="P:DevGate.Data.Entities.NonDeletableEntity.IsDeleted"/> true, and sets the audit fields
+            Soft deletes a collection of <see cref="T:DevGate.Domain.Entities.NonDeletableEntity"/> by setting the property <see cref="P:DevGate.Domain.Entities.NonDeletableEntity.IsDeleted"/> true, and sets the audit fields
             </summary>
             <typeparam name="TEntity">Entity type</typeparam>
             <param name="entities">Collection of entity objects</param>
-            <param name="deletedBy"><see cref="P:DevGate.Data.Entities.NonDeletableEntity.DeletedBy"/></param>
-            <param name="deletedOn"><see cref="P:DevGate.Data.Entities.NonDeletableEntity.DeletedOn"/></param>
+            <param name="deletedBy"><see cref="P:DevGate.Domain.Entities.NonDeletableEntity.DeletedBy"/></param>
+            <param name="deletedOn"><see cref="P:DevGate.Domain.Entities.NonDeletableEntity.DeletedOn"/></param>
             <returns>Repository instance</returns>
         </member>
         <member name="M:DevGate.Data.Repositories.IEntityRepository`1.SaveAsync">
@@ -559,8 +559,8 @@
             </summary>
             <typeparam name="TEntity">Entity type</typeparam>
             <param name="entity">Entity object</param>
-            <param name="updatedBy"><see cref="P:DevGate.Data.Entities.Audits.IUpdated.UpdatedBy"/></param>
-            <param name="updatedOn"><see cref="P:DevGate.Data.Entities.Audits.IUpdated.UpdatedOn"/></param>
+            <param name="updatedBy"><see cref="P:DevGate.Domain.Entities.Audits.IUpdated.UpdatedBy"/></param>
+            <param name="updatedOn"><see cref="P:DevGate.Domain.Entities.Audits.IUpdated.UpdatedOn"/></param>
             <returns>Repository instance</returns>
         </member>
         <member name="M:DevGate.Data.Repositories.IEntityRepository`1.Update``1(System.Collections.Generic.ICollection{``0})">
@@ -577,8 +577,8 @@
             </summary>
             <typeparam name="TEntity">Entity type</typeparam>
             <param name="entities">Collection of entity objects</param>
-            <param name="updatedBy"><see cref="P:DevGate.Data.Entities.Audits.IUpdated.UpdatedBy"/></param>
-            <param name="updatedOn"><see cref="P:DevGate.Data.Entities.Audits.IUpdated.UpdatedOn"/></param>
+            <param name="updatedBy"><see cref="P:DevGate.Domain.Entities.Audits.IUpdated.UpdatedBy"/></param>
+            <param name="updatedOn"><see cref="P:DevGate.Domain.Entities.Audits.IUpdated.UpdatedOn"/></param>
             <returns>Repository instance</returns>
         </member>
         <member name="T:DevGate.Data.Seeds.IDbContextSeeder`1">

@@ -4,8 +4,8 @@
     <TargetFramework>netstandard2.1</TargetFramework>
     <Authors>Robert Breedt</Authors>
     <Company>DevGate</Company>
-    <Description>Enchancement library intended for 'Persistence' Layer</Description>
-    <PackageTags>Entity Framework, EF, specification</PackageTags>
+    <Description>Enchancement library intended for 'Persistence' layer.</Description>
+    <PackageTags>Entity Framework, Specification, Repository, DbContext</PackageTags>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
   </PropertyGroup>
 
@@ -15,6 +15,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="DevGate.Domain" Version="1.0.1" />
     <PackageReference Include="LinqKit.Microsoft.EntityFrameworkCore" Version="1.1.16" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.0.0">
