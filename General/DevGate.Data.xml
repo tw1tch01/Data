@@ -63,94 +63,6 @@
             <typeparam name="TEntity">Entity type in the set</typeparam>
             <returns>Set of given entity type</returns>
         </member>
-        <member name="T:DevGate.Domain.Entities.Audits.ICreated">
-            <summary>
-            Represents required fields for a creatable-audit entity
-            </summary>
-        </member>
-        <member name="P:DevGate.Domain.Entities.Audits.ICreated.CreatedBy">
-            <summary>
-            Who created the entity
-            </summary>
-        </member>
-        <member name="P:DevGate.Domain.Entities.Audits.ICreated.CreatedOn">
-            <summary>
-            When the entity was created
-            </summary>
-        </member>
-        <member name="M:DevGate.Domain.Entities.Audits.ICreated.Create(System.String,System.DateTime)">
-            <summary>
-            Set the audit fields after the entity is created
-            </summary>
-            <param name="createdBy"><see cref="P:DevGate.Domain.Entities.Audits.ICreated.CreatedBy"/></param>
-            <param name="createdOn"><see cref="P:DevGate.Domain.Entities.Audits.ICreated.CreatedOn"/></param>
-        </member>
-        <member name="T:DevGate.Domain.Entities.Audits.IUpdated">
-            <summary>
-            Represents required fields for an updatable-audit entity
-            </summary>
-        </member>
-        <member name="P:DevGate.Domain.Entities.Audits.IUpdated.UpdatedBy">
-            <summary>
-            Who updated the entity
-            </summary>
-        </member>
-        <member name="P:DevGate.Domain.Entities.Audits.IUpdated.UpdatedOn">
-            <summary>
-            When the entity was updated
-            </summary>
-            <remarks>If property is null, entity has NOT been updated</remarks>
-        </member>
-        <member name="M:DevGate.Domain.Entities.Audits.IUpdated.Update(System.String,System.DateTime)">
-            <summary>
-            Set the audit fields after the entity is updated
-            </summary>
-            <param name="updatedBy"><see cref="P:DevGate.Domain.Entities.Audits.IUpdated.UpdatedBy"/></param>
-            <param name="updatedOn"><see cref="P:DevGate.Domain.Entities.Audits.IUpdated.UpdatedOn"/></param>
-        </member>
-        <member name="T:DevGate.Domain.Entities.BaseEntity">
-            <summary>
-            Represents the abstract class that all entities should inherit from
-            </summary>
-        </member>
-        <member name="T:DevGate.Domain.Entities.NonDeletableEntity">
-            <summary>
-            Represents a non-deletable entity
-            </summary>
-        </member>
-        <member name="P:DevGate.Domain.Entities.NonDeletableEntity.DeletedBy">
-            <summary>
-            Who "deleted" the entity
-            </summary>
-        </member>
-        <member name="P:DevGate.Domain.Entities.NonDeletableEntity.DeletedOn">
-            <summary>
-            When the entity was "deleteD"
-            </summary>
-            <remarks>If value is null, entity has NOT been deleted</remarks>
-        </member>
-        <member name="P:DevGate.Domain.Entities.NonDeletableEntity.IsDeleted">
-            <summary>
-            Indication of whether the entity has been "soft" deleted
-            </summary>
-        </member>
-        <member name="P:DevGate.Domain.Entities.NonDeletableEntity.IsDeletable">
-            <summary>
-            Ensures the entity cannot be deleted
-            </summary>
-        </member>
-        <member name="M:DevGate.Domain.Entities.NonDeletableEntity.Delete(System.String,System.DateTime)">
-            <summary>
-            Sets the audit fields, after the entity is soft "deleted"
-            </summary>
-            <param name="deletedBy"></param>
-            <param name="deletedOn"></param>
-        </member>
-        <member name="M:DevGate.Domain.Entities.NonDeletableEntity.Restore">
-            <summary>
-            Unsets the audit fields to restore an entity
-            </summary>
-        </member>
         <member name="T:DevGate.Data.Extensions.Services.ServiceCollectionExtensions">
             <summary>
             Extends the IServiceCollection with methods that enhance DevGate.Data
@@ -219,6 +131,13 @@
             </summary>
             <typeparam name="TContext">Context type</typeparam>
             <param name="services"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DevGate.Data.Extensions.Tests.SpecificationTestExtensions.Satifies``1(DevGate.Data.Specifications.Specification{``0},``0)">
+            <summary>
+            Determines if the specification satisfies the entity
+            </summary>
+            <param name="entity"></param>
             <returns></returns>
         </member>
         <member name="T:DevGate.Data.Migrations.IMigratable">
@@ -364,6 +283,16 @@
         <member name="M:DevGate.Data.Repositories.EntityRepository`1.Remove``1(System.Collections.Generic.ICollection{``0},System.String,System.DateTime)">
             <summary>
             See <see cref="M:DevGate.Data.Repositories.IEntityRepository`1.Remove``1(System.Collections.Generic.ICollection{``0},System.String,System.DateTime)"/>
+            </summary>
+        </member>
+        <member name="M:DevGate.Data.Repositories.EntityRepository`1.Restore``1(``0)">
+            <summary>
+            See <see cref="M:DevGate.Data.Repositories.IEntityRepository`1.Restore``1(``0)"/>
+            </summary>
+        </member>
+        <member name="M:DevGate.Data.Repositories.EntityRepository`1.Restore``1(System.Collections.Generic.ICollection{``0})">
+            <summary>
+            See <see cref="M:DevGate.Data.Repositories.IEntityRepository`1.Restore``1(System.Collections.Generic.ICollection{``0})"/>
             </summary>
         </member>
         <member name="M:DevGate.Data.Repositories.EntityRepository`1.SaveAsync">
@@ -531,11 +460,27 @@
             <param name="deletedOn"><see cref="P:DevGate.Domain.Entities.NonDeletableEntity.DeletedOn"/></param>
             <returns>Repository instance</returns>
         </member>
+        <member name="M:DevGate.Data.Repositories.IEntityRepository`1.Restore``1(``0)">
+            <summary>
+            Restore a soft deleted entity by setting <see cref="P:DevGate.Domain.Entities.NonDeletableEntity.DeletedBy"/> and <see cref="P:DevGate.Domain.Entities.NonDeletableEntity.DeletedOn"/> to null
+            </summary>
+            <typeparam name="TEntity">Entity type</typeparam>
+            <param name="entity">Entity object</param>
+            <returns>Repository instance</returns>
+        </member>
+        <member name="M:DevGate.Data.Repositories.IEntityRepository`1.Restore``1(System.Collections.Generic.ICollection{``0})">
+            <summary>
+            Restore a collection of soft deleted entities by setting their <see cref="P:DevGate.Domain.Entities.NonDeletableEntity.DeletedBy"/> and <see cref="P:DevGate.Domain.Entities.NonDeletableEntity.DeletedOn"/> to null
+            </summary>
+            <typeparam name="TEntity">Entity type</typeparam>
+            <param name="entity">Entity object</param>
+            <returns>Repository instance</returns>
+        </member>
         <member name="M:DevGate.Data.Repositories.IEntityRepository`1.SaveAsync">
             <summary>
-            Executes the <see cref="M:DevGate.Data.Contexts.IDbContext.SaveChangesAsync(System.Threading.CancellationToken)"/> action
+            Saves all changes made ot the context
             </summary>
-            <returns>Number of records effected</returns>
+            <returns>Number of records affected</returns>
         </member>
         <member name="M:DevGate.Data.Repositories.IEntityRepository`1.SingleAsync``1(DevGate.Data.Specifications.Specification{``0})">
             <summary>
@@ -816,13 +761,6 @@
             </summary>
             <typeparam name="TProperty"></typeparam>
             <param name="expression"></param>
-            <returns></returns>
-        </member>
-        <member name="M:DevGate.Data.Specifications.Specification`1.Satifies(`0)">
-            <summary>
-            Determines if the specification satisfies the entity
-            </summary>
-            <param name="entity"></param>
             <returns></returns>
         </member>
         <member name="M:DevGate.Data.Specifications.Specification`1.ToExpression">

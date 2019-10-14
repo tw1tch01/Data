@@ -1,5 +1,5 @@
 ﻿param(
-	[string]$VersionSource = "DevGate.Data.csproj",
+	[string]$VersionSource = "..\DevGate.Data\DevGate.Data.csproj",
 	[string]$PackageLocation = "bin\release",
 	[string]$Name = "DevGate.Data",
 	[string]$NugetSource = "DevGate.NuGet"
@@ -11,15 +11,16 @@
 # Command line template:
 # -VersionSource "$(build.sourcesdirectory)\DevGate.Data\DevGate.Data.csproj" -Name "DevGate.Data" -NugetSource [Nuget Source] -ApiKey [API key]
 
-[xml]$XmlDocument = Get-Content -Path $VersionSource
-$Package = "$Name.$($XmlDocument.GetElementsByTagName("Version")[0].InnerText).nupkg"
-$currentLocation = Get-Location
-if ($PackageLocation -ne "") {
-	Set-Location $PackageLocation
-}
+#[xml]$XmlDocument = Get-Content -Path $VersionSource
 
-dotnet pack 
-
-Write-Host "Publishing package: $Package to NuGet source: $NugetSource"
-nuget push $Package -source $NugetSource 
-Set-Location $currentLocation
+# $Package = "$Name.$($XmlDocument.GetElementsByTagName("Version")[0].InnerText).nupkg"
+# $currentLocation = Get-Location
+# if ($PackageLocation -ne "") {
+# 	Set-Location $PackageLocation
+# }
+# 
+dotnet pack -o D:\NuGet
+# 
+# Write-Host "Publishing package: $Package to NuGet source: $NugetSource"
+# nuget push $Package -source $NugetSource 
+# Set-Location $currentLocation
