@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DevGate.Data.Contexts;
-using DevGate.Domain.Entities;
-using DevGate.Domain.Entities.Audits;
 using DevGate.Data.Other;
 using DevGate.Data.Specifications;
+using DevGate.Domain.Entities;
+using DevGate.Domain.Entities.Audits;
 using Microsoft.Extensions.Logging;
 
 namespace DevGate.Data.Repositories
@@ -153,9 +153,25 @@ namespace DevGate.Data.Repositories
 		Task<IEntityRepository<TContext>> Remove<TEntity>(ICollection<TEntity> entities, string deletedBy, DateTime deletedOn) where TEntity : NonDeletableEntity;
 
 		/// <summary>
-		/// Executes the <see cref="IDbContext.SaveChangesAsync(System.Threading.CancellationToken)"/> action
+		/// Restore a soft deleted entity by setting <see cref="NonDeletableEntity.DeletedBy"/> and <see cref="NonDeletableEntity.DeletedOn"/> to null
 		/// </summary>
-		/// <returns>Number of records effected</returns>
+		/// <typeparam name="TEntity">Entity type</typeparam>
+		/// <param name="entity">Entity object</param>
+		/// <returns>Repository instance</returns>
+		Task<IEntityRepository<TContext>> Restore<TEntity>(TEntity entity) where TEntity : NonDeletableEntity;
+
+		/// <summary>
+		/// Restore a collection of soft deleted entities by setting their <see cref="NonDeletableEntity.DeletedBy"/> and <see cref="NonDeletableEntity.DeletedOn"/> to null
+		/// </summary>
+		/// <typeparam name="TEntity">Entity type</typeparam>
+		/// <param name="entity">Entity object</param>
+		/// <returns>Repository instance</returns>
+		Task<IEntityRepository<TContext>> Restore<TEntity>(ICollection<TEntity> entities) where TEntity : NonDeletableEntity;
+
+		/// <summary>
+		/// Saves all changes made ot the context
+		/// </summary>
+		/// <returns>Number of records affected</returns>
 		Task<int> SaveAsync();
 
 		/// <summary>

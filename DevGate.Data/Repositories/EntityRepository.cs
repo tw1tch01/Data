@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DevGate.Data.Contexts;
-using DevGate.Domain.Entities;
-using DevGate.Domain.Entities.Audits;
 using DevGate.Data.Other;
 using DevGate.Data.Specifications;
+using DevGate.Domain.Entities;
+using DevGate.Domain.Entities.Audits;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -184,6 +184,24 @@ namespace DevGate.Data.Repositories
 			Array.ForEach(entities.ToArray(), (entity) => entity.Delete(deletedBy, deletedOn));
 			DataContext.Set<TEntity>().RemoveRange(entities.Where(e => e.IsDeletable()));
 			return Task.FromResult<IEntityRepository<TContext>>(this);
+		}
+
+		/// <summary>
+		/// See <see cref="IEntityRepository{TContext}.Restore{TEntity}(TEntity)"/>
+		/// </summary>
+		public Task<IEntityRepository<TContext>> Restore<TEntity>(TEntity entity) where TEntity : NonDeletableEntity
+		{
+			entity.Restore();
+			return Attach(entity);
+		}
+
+		/// <summary>
+		/// See <see cref="IEntityRepository{TContext}.Restore{TEntity}(ICollection{TEntity})"/>
+		/// </summary>
+		public Task<IEntityRepository<TContext>> Restore<TEntity>(ICollection<TEntity> entities) where TEntity : NonDeletableEntity
+		{
+			Array.ForEach(entities.ToArray(), (entity) => entity.Restore());
+			return Attach(entities);
 		}
 
 		/// <summary>
