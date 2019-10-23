@@ -49,19 +49,54 @@
             Provides information and operations for the entity instances this context is tracking.
             </summary>
         </member>
-        <member name="M:DevGate.Data.Contexts.IDbContext.SaveChangesAsync(System.Threading.CancellationToken)">
+        <member name="P:DevGate.Data.Contexts.IDbContext.UserScope">
+            <summary>
+            See <see cref="T:DevGate.Data.Other.UserContextScope"/>
+            </summary>
+        </member>
+        <member name="M:DevGate.Data.Contexts.IDbContext.SaveChangesAsync(System.Boolean,System.Threading.CancellationToken)">
             <summary>
             Saves the <see cref="T:Microsoft.EntityFrameworkCore.DbContext" /> changes
             </summary>
+            <param name="acceptAllChangesOnSuccess"></param>
             <param name="cancellationToken"></param>
             <returns></returns>
         </member>
         <member name="M:DevGate.Data.Contexts.IDbContext.Set``1">
             <summary>
-            Creates a <see cref="T:Microsoft.EntityFrameworkCore.DbSet`1"/> to query and save instances of TEntity. />
+            Creates a <see cref="T:Microsoft.EntityFrameworkCore.DbSet`1"/> to query and save instances of TEntity. Implement as a `new` method which returns the base <see cref="M:Microsoft.EntityFrameworkCore.DbContext.Set``1"/> method
             </summary>
             <typeparam name="TEntity">Entity type in the set</typeparam>
             <returns>Set of given entity type</returns>
+        </member>
+        <member name="T:DevGate.Data.Extensions.IDbContextExtensions">
+            <summary>
+            Extension methods for <see cref="T:DevGate.Data.Contexts.IDbContext"/>
+            </summary>
+        </member>
+        <member name="M:DevGate.Data.Extensions.IDbContextExtensions.ConcurrencySave(DevGate.Data.Contexts.IDbContext,System.Int32,Microsoft.Extensions.Logging.ILogger,System.Boolean,System.Threading.CancellationToken)">
+            <summary>
+            Asynchronously saves all changes in this context to the database with with retries in the event of concurrency failure.
+            </summary>
+            <param name="context">Context instance</param>
+            <param name="retryAttempts">Retry attempts</param>
+            <param name="logger">Logger instance</param>
+            <param name="acceptAllChangesOnSuccess"></param>
+            <param name="cancellationToken"></param>
+            <returns>Number of affected records</returns>
+        </member>
+        <member name="M:DevGate.Data.Extensions.IDbContextExtensions.GetValidationErrors(DevGate.Data.Contexts.IDbContext)">
+            <summary>
+            Gets all validation errors
+            </summary>
+            <param name="context">Context instances</param>
+            <returns>Dictionary of entity with validation errors</returns>
+        </member>
+        <member name="M:DevGate.Data.Extensions.IDbContextExtensions.SetAuditingFields(DevGate.Data.Contexts.IDbContext)">
+            <summary>
+            Set the res[ective entitys' audit fields
+            </summary>
+            <param name="context">Context instance</param>
         </member>
         <member name="T:DevGate.Data.Extensions.Services.ServiceCollectionExtensions">
             <summary>
@@ -133,12 +168,18 @@
             <param name="services"></param>
             <returns></returns>
         </member>
+        <member name="T:DevGate.Data.Extensions.Tests.SpecificationTestExtensions">
+            <summary>
+            Testing extension methods for <see cref="T:DevGate.Data.Specifications.Specification`1"/>
+            </summary>
+        </member>
         <member name="M:DevGate.Data.Extensions.Tests.SpecificationTestExtensions.Satifies``1(DevGate.Data.Specifications.Specification{``0},``0)">
             <summary>
             Determines if the specification satisfies the entity
             </summary>
-            <param name="entity"></param>
-            <returns></returns>
+            <param name="specification">Specification instance</param>
+            <param name="entity">Entity instance</param>
+            <returns>Whether entity is satisfied by Specifcation</returns>
         </member>
         <member name="T:DevGate.Data.Migrations.IMigratable">
             <summary>
@@ -189,6 +230,16 @@
             Dictionary of audit types and their respective fields
             </summary>
         </member>
+        <member name="T:DevGate.Data.Other.UserContextScope">
+            <summary>
+            Provides information for the context as to what is performing actions
+            </summary>
+        </member>
+        <member name="P:DevGate.Data.Other.UserContextScope.Username">
+            <summary>
+            User performing the action
+            </summary>
+        </member>
         <member name="T:DevGate.Data.Repositories.EntityRepository`1">
             <summary>
             See <see cref="T:DevGate.Data.Repositories.IEntityRepository`1"/>
@@ -225,19 +276,9 @@
             See <see cref="M:DevGate.Data.Repositories.IEntityRepository`1.AddAsync``1(System.Collections.Generic.ICollection{``0})"/>
             </summary>
         </member>
-        <member name="M:DevGate.Data.Repositories.EntityRepository`1.AddAsync``1(System.Collections.Generic.ICollection{``0},System.String,System.DateTime)">
-            <summary>
-            See <see cref="M:DevGate.Data.Repositories.IEntityRepository`1.AddAsync``1(System.Collections.Generic.ICollection{``0},System.String,System.DateTime)"/>
-            </summary>
-        </member>
         <member name="M:DevGate.Data.Repositories.EntityRepository`1.AddAsync``1(``0)">
             <summary>
             See <see cref="M:DevGate.Data.Repositories.IEntityRepository`1.AddAsync``1(``0)"/>
-            </summary>
-        </member>
-        <member name="M:DevGate.Data.Repositories.EntityRepository`1.AddAsync``1(``0,System.String,System.DateTime)">
-            <summary>
-            See <see cref="M:DevGate.Data.Repositories.IEntityRepository`1.AddAsync``1(``0,System.String,System.DateTime)"/>
             </summary>
         </member>
         <member name="M:DevGate.Data.Repositories.EntityRepository`1.Attach``1(``0)">
@@ -270,19 +311,9 @@
             See <see cref="M:DevGate.Data.Repositories.IEntityRepository`1.Remove``1(``0)"/>
             </summary>
         </member>
-        <member name="M:DevGate.Data.Repositories.EntityRepository`1.Remove``1(``0,System.String,System.DateTime)">
-            <summary>
-            See <see cref="M:DevGate.Data.Repositories.IEntityRepository`1.Remove``1(``0,System.String,System.DateTime)"/>
-            </summary>
-        </member>
         <member name="M:DevGate.Data.Repositories.EntityRepository`1.Remove``1(System.Collections.Generic.ICollection{``0})">
             <summary>
             See <see cref="M:DevGate.Data.Repositories.IEntityRepository`1.Remove``1(System.Collections.Generic.ICollection{``0})"/>
-            </summary>
-        </member>
-        <member name="M:DevGate.Data.Repositories.EntityRepository`1.Remove``1(System.Collections.Generic.ICollection{``0},System.String,System.DateTime)">
-            <summary>
-            See <see cref="M:DevGate.Data.Repositories.IEntityRepository`1.Remove``1(System.Collections.Generic.ICollection{``0},System.String,System.DateTime)"/>
             </summary>
         </member>
         <member name="M:DevGate.Data.Repositories.EntityRepository`1.Restore``1(``0)">
@@ -310,19 +341,9 @@
             See <see cref="M:DevGate.Data.Repositories.IEntityRepository`1.Update``1(``0)"/>
             </summary>
         </member>
-        <member name="M:DevGate.Data.Repositories.EntityRepository`1.Update``1(``0,System.String,System.DateTime)">
-            <summary>
-            See <see cref="M:DevGate.Data.Repositories.IEntityRepository`1.Update``1(``0,System.String,System.DateTime)"/>
-            </summary>
-        </member>
         <member name="M:DevGate.Data.Repositories.EntityRepository`1.Update``1(System.Collections.Generic.ICollection{``0})">
             <summary>
             See <see cref="M:DevGate.Data.Repositories.IEntityRepository`1.Update``1(System.Collections.Generic.ICollection{``0})"/>
-            </summary>
-        </member>
-        <member name="M:DevGate.Data.Repositories.EntityRepository`1.Update``1(System.Collections.Generic.ICollection{``0},System.String,System.DateTime)">
-            <summary>
-            See <see cref="M:DevGate.Data.Repositories.IEntityRepository`1.Update``1(System.Collections.Generic.ICollection{``0},System.String,System.DateTime)"/>
             </summary>
         </member>
         <member name="T:DevGate.Data.Repositories.IEntityRepository`1">
@@ -354,32 +375,12 @@
             <param name="entities">Etnity object</param>
             <returns>Repository instance</returns>
         </member>
-        <member name="M:DevGate.Data.Repositories.IEntityRepository`1.AddAsync``1(System.Collections.Generic.ICollection{``0},System.String,System.DateTime)">
-            <summary>
-            Adds the collection of entites to the <see cref="T:DevGate.Data.Contexts.IDbContext"/> and sets their audit fields
-            </summary>
-            <typeparam name="TEntity">Entity types</typeparam>
-            <param name="entities">Collection of entity objects</param>
-            <param name="createdBy"><see cref="P:DevGate.Domain.Entities.Audits.ICreated.CreatedBy"/></param>
-            <param name="createdOn"><see cref="P:DevGate.Domain.Entities.Audits.ICreated.CreatedOn"/></param>
-            <returns>Repository instance</returns>
-        </member>
         <member name="M:DevGate.Data.Repositories.IEntityRepository`1.AddAsync``1(``0)">
             <summary>
             Adds the entity into the <see cref="T:DevGate.Data.Contexts.IDbContext"/>
             </summary>
             <typeparam name="TEntity">Entity type</typeparam>
             <param name="entity">Entity object</param>
-            <returns>Repository instance</returns>
-        </member>
-        <member name="M:DevGate.Data.Repositories.IEntityRepository`1.AddAsync``1(``0,System.String,System.DateTime)">
-            <summary>
-            Adds the entity into the <see cref="T:DevGate.Data.Contexts.IDbContext"/>
-            </summary>
-            <typeparam name="TEntity">Entity type</typeparam>
-            <param name="entity">Entity object</param>
-            <param name="createdBy"><see cref="P:DevGate.Domain.Entities.Audits.ICreated.CreatedBy"/></param>
-            <param name="createdOn"><see cref="P:DevGate.Domain.Entities.Audits.ICreated.CreatedOn"/></param>
             <returns>Repository instance</returns>
         </member>
         <member name="M:DevGate.Data.Repositories.IEntityRepository`1.Attach``1(``0)">
@@ -432,32 +433,12 @@
             <param name="entity">Entity object</param>
             <returns>Repository instance</returns>
         </member>
-        <member name="M:DevGate.Data.Repositories.IEntityRepository`1.Remove``1(``0,System.String,System.DateTime)">
-            <summary>
-            Soft deletes the <see cref="T:DevGate.Domain.Entities.NonDeletableEntity"/> by setting the property <see cref="P:DevGate.Domain.Entities.NonDeletableEntity.IsDeleted"/> true, and sets the audit fields
-            </summary>
-            <typeparam name="TEntity">Entity type</typeparam>
-            <param name="entity">Entity object</param>
-            <param name="deletedBy"><see cref="P:DevGate.Domain.Entities.NonDeletableEntity.DeletedBy"/></param>
-            <param name="deletedOn"><see cref="P:DevGate.Domain.Entities.NonDeletableEntity.DeletedOn"/></param>
-            <returns>Repository instance</returns>
-        </member>
         <member name="M:DevGate.Data.Repositories.IEntityRepository`1.Remove``1(System.Collections.Generic.ICollection{``0})">
             <summary>
             Removes a collection of entities from the <see cref="T:DevGate.Data.Contexts.IDbContext"/>
             </summary>
             <typeparam name="TEntity">Entity type</typeparam>
             <param name="entities">Collection of entity objects</param>
-            <returns>Repository instance</returns>
-        </member>
-        <member name="M:DevGate.Data.Repositories.IEntityRepository`1.Remove``1(System.Collections.Generic.ICollection{``0},System.String,System.DateTime)">
-            <summary>
-            Soft deletes a collection of <see cref="T:DevGate.Domain.Entities.NonDeletableEntity"/> by setting the property <see cref="P:DevGate.Domain.Entities.NonDeletableEntity.IsDeleted"/> true, and sets the audit fields
-            </summary>
-            <typeparam name="TEntity">Entity type</typeparam>
-            <param name="entities">Collection of entity objects</param>
-            <param name="deletedBy"><see cref="P:DevGate.Domain.Entities.NonDeletableEntity.DeletedBy"/></param>
-            <param name="deletedOn"><see cref="P:DevGate.Domain.Entities.NonDeletableEntity.DeletedOn"/></param>
             <returns>Repository instance</returns>
         </member>
         <member name="M:DevGate.Data.Repositories.IEntityRepository`1.Restore``1(``0)">
@@ -473,7 +454,7 @@
             Restore a collection of soft deleted entities by setting their <see cref="P:DevGate.Domain.Entities.NonDeletableEntity.DeletedBy"/> and <see cref="P:DevGate.Domain.Entities.NonDeletableEntity.DeletedOn"/> to null
             </summary>
             <typeparam name="TEntity">Entity type</typeparam>
-            <param name="entity">Entity object</param>
+            <param name="entities">Entity object</param>
             <returns>Repository instance</returns>
         </member>
         <member name="M:DevGate.Data.Repositories.IEntityRepository`1.SaveAsync">
@@ -498,32 +479,12 @@
             <param name="entity">Entity object</param>
             <returns>Repository instance</returns>
         </member>
-        <member name="M:DevGate.Data.Repositories.IEntityRepository`1.Update``1(``0,System.String,System.DateTime)">
-            <summary>
-            Attach an entity to this context
-            </summary>
-            <typeparam name="TEntity">Entity type</typeparam>
-            <param name="entity">Entity object</param>
-            <param name="updatedBy"><see cref="P:DevGate.Domain.Entities.Audits.IUpdated.UpdatedBy"/></param>
-            <param name="updatedOn"><see cref="P:DevGate.Domain.Entities.Audits.IUpdated.UpdatedOn"/></param>
-            <returns>Repository instance</returns>
-        </member>
         <member name="M:DevGate.Data.Repositories.IEntityRepository`1.Update``1(System.Collections.Generic.ICollection{``0})">
             <summary>
             Attaches the collection of altered entities to the <see cref="T:DevGate.Data.Contexts.IDbContext"/>
             </summary>
             <typeparam name="TEntity">Entity type</typeparam>
             <param name="entities">Collection of entity objects</param>
-            <returns>Repository instance</returns>
-        </member>
-        <member name="M:DevGate.Data.Repositories.IEntityRepository`1.Update``1(System.Collections.Generic.ICollection{``0},System.String,System.DateTime)">
-            <summary>
-            Attaches and updates the entity to the <see cref="T:DevGate.Data.Contexts.IDbContext"/>
-            </summary>
-            <typeparam name="TEntity">Entity type</typeparam>
-            <param name="entities">Collection of entity objects</param>
-            <param name="updatedBy"><see cref="P:DevGate.Domain.Entities.Audits.IUpdated.UpdatedBy"/></param>
-            <param name="updatedOn"><see cref="P:DevGate.Domain.Entities.Audits.IUpdated.UpdatedOn"/></param>
             <returns>Repository instance</returns>
         </member>
         <member name="T:DevGate.Data.Seeds.IDbContextSeeder`1">

@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using DevGate.Data.Contexts;
+using DevGate.Data.Extensions;
 using DevGate.Data.Other;
 using DevGate.Data.Specifications;
 using DevGate.Domain.Entities;
-using DevGate.Domain.Entities.Audits;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -69,30 +70,10 @@ namespace DevGate.Data.Repositories
 		}
 
 		/// <summary>
-		/// See <see cref="IEntityRepository{TContext}.AddAsync{TEntity}(ICollection{TEntity}, string, DateTime)"/>
-		/// </summary>
-		public async Task<IEntityRepository<TContext>> AddAsync<TEntity>(ICollection<TEntity> entities, string createdBy, DateTime createdOn) where TEntity : BaseEntity, ICreated
-		{
-			Array.ForEach(entities.ToArray(), (entity) => entity.Create(createdBy, createdOn));
-			await DataContext.Set<TEntity>().AddRangeAsync(entities);
-			return this;
-		}
-
-		/// <summary>
 		/// See <see cref="IEntityRepository{TContext}.AddAsync{TEntity}(TEntity)"/>
 		/// </summary>
 		public async Task<IEntityRepository<TContext>> AddAsync<TEntity>(TEntity entity) where TEntity : BaseEntity
 		{
-			await DataContext.Set<TEntity>().AddAsync(entity);
-			return this;
-		}
-
-		/// <summary>
-		/// See <see cref="IEntityRepository{TContext}.AddAsync{TEntity}(TEntity, string, DateTime)"/>
-		/// </summary>
-		public async Task<IEntityRepository<TContext>> AddAsync<TEntity>(TEntity entity, string createdBy, DateTime createdOn) where TEntity : BaseEntity, ICreated
-		{
-			entity.Create(createdBy, createdOn);
 			await DataContext.Set<TEntity>().AddAsync(entity);
 			return this;
 		}
@@ -118,11 +99,21 @@ namespace DevGate.Data.Repositories
 		/// <summary>
 		/// See <see cref="IEntityRepository{TContext}.FindAsync{TEntity}(Specification{TEntity})"/>
 		/// </summary>
-		public async Task<TEntity> FindAsync<TEntity>(Specification<TEntity> specification) where TEntity : BaseEntity
+		public async Task<TEntity> FindAsync<TEntity, TProperty>(TProperty primaryKey) where TEntity : BaseEntity
+		{
+			if (primaryKey == null || primaryKey == default) throw new ArgumentNullException(nameof(primaryKey));
+
+			return await DataContext.Set<TEntity>().FindAsync(primaryKey);
+		}
+
+		/// <summary>
+		/// See <see cref="IEntityRepository{TContext}.GetAsync{TEntity}(Specification{TEntity})"/>
+		/// </summary>
+		public async Task<TEntity> GetAsync<TEntity>(Specification<TEntity> specification) where TEntity : BaseEntity
 		{
 			if (specification == null) throw new ArgumentNullException(nameof(specification));
 
-			return await ConvertToQuery(specification).FirstOrDefaultAsync();
+			return await specification.AsQueryable(DataContext).FirstOrDefaultAsync();
 		}
 
 		/// <summary>
@@ -132,7 +123,7 @@ namespace DevGate.Data.Repositories
 		{
 			if (specification == null) throw new ArgumentNullException(nameof(specification));
 
-			return await ConvertToQuery(specification).ToListAsync();
+			return await specification.AsQueryable(DataContext).ToListAsync();
 		}
 
 		/// <summary>
@@ -142,7 +133,7 @@ namespace DevGate.Data.Repositories
 		{
 			if (specification == null) throw new ArgumentNullException(nameof(specification));
 
-			return await resolver(ConvertToQuery(specification));
+			return await resolver(specification.AsQueryable(DataContext));
 		}
 
 		/// <summary>
@@ -150,18 +141,7 @@ namespace DevGate.Data.Repositories
 		/// </summary>
 		public Task<IEntityRepository<TContext>> Remove<TEntity>(TEntity entity) where TEntity : BaseEntity
 		{
-			if (!entity.IsDeletable()) return Remove(entity as NonDeletableEntity, nameof(EntityRepository<TContext>), DateTime.UtcNow);
-
 			DataContext.Set<TEntity>().Remove(entity);
-			return Task.FromResult<IEntityRepository<TContext>>(this);
-		}
-
-		/// <summary>
-		/// See <see cref="IEntityRepository{TContext}.Remove{TEntity}(TEntity, string, DateTime)"/>
-		/// </summary>
-		public Task<IEntityRepository<TContext>> Remove<TEntity>(TEntity entity, string deletedBy, DateTime deletedOn) where TEntity : NonDeletableEntity
-		{
-			entity.Delete(deletedBy, deletedOn);
 			return Task.FromResult<IEntityRepository<TContext>>(this);
 		}
 
@@ -170,18 +150,6 @@ namespace DevGate.Data.Repositories
 		/// </summary>
 		public Task<IEntityRepository<TContext>> Remove<TEntity>(ICollection<TEntity> entities) where TEntity : BaseEntity
 		{
-			if (entities.Any(e => !e.IsDeletable())) Remove(entities.Where(e => !e.IsDeletable()) as ICollection<NonDeletableEntity>, nameof(EntityRepository<TContext>), DateTime.UtcNow);
-
-			DataContext.Set<TEntity>().RemoveRange(entities.Where(e => e.IsDeletable()));
-			return Task.FromResult<IEntityRepository<TContext>>(this);
-		}
-
-		/// <summary>
-		/// See <see cref="IEntityRepository{TContext}.Remove{TEntity}(ICollection{TEntity}, string, DateTime)"/>
-		/// </summary>
-		public Task<IEntityRepository<TContext>> Remove<TEntity>(ICollection<TEntity> entities, string deletedBy, DateTime deletedOn) where TEntity : NonDeletableEntity
-		{
-			Array.ForEach(entities.ToArray(), (entity) => entity.Delete(deletedBy, deletedOn));
 			DataContext.Set<TEntity>().RemoveRange(entities.Where(e => e.IsDeletable()));
 			return Task.FromResult<IEntityRepository<TContext>>(this);
 		}
@@ -209,7 +177,12 @@ namespace DevGate.Data.Repositories
 		/// </summary>
 		public async Task<int> SaveAsync()
 		{
-			return await DataContext.SaveChangesAsync();
+			var validationErrors = DataContext.GetValidationErrors();
+			if (validationErrors.Any()) throw new ValidationException($"Validation errors:\n {string.Join(Environment.NewLine, validationErrors)}");
+
+			DataContext.SetAuditingFields();
+
+			return await DataContext.ConcurrencySave(RetryAttempts, Logger, true, default);
 		}
 
 		/// <summary>
@@ -219,7 +192,7 @@ namespace DevGate.Data.Repositories
 		{
 			if (specification == null) throw new ArgumentNullException(nameof(specification));
 
-			return await ConvertToQuery(specification).SingleAsync();
+			return await specification.AsQueryable(DataContext).SingleAsync();
 		}
 
 		/// <summary>
@@ -227,16 +200,6 @@ namespace DevGate.Data.Repositories
 		/// </summary>
 		public Task<IEntityRepository<TContext>> Update<TEntity>(TEntity entity) where TEntity : BaseEntity
 		{
-			DataContext.Set<TEntity>().Update(entity);
-			return Task.FromResult<IEntityRepository<TContext>>(this);
-		}
-
-		/// <summary>
-		/// See <see cref="IEntityRepository{TContext}.Update{TEntity}(TEntity, string, DateTime)"/>
-		/// </summary>
-		public Task<IEntityRepository<TContext>> Update<TEntity>(TEntity entity, string updatedBy, DateTime updatedOn) where TEntity : BaseEntity, IUpdated
-		{
-			entity.Update(updatedBy, updatedOn);
 			DataContext.Set<TEntity>().Update(entity);
 			return Task.FromResult<IEntityRepository<TContext>>(this);
 		}
@@ -250,32 +213,6 @@ namespace DevGate.Data.Repositories
 			return Task.FromResult<IEntityRepository<TContext>>(this);
 		}
 
-		/// <summary>
-		/// See <see cref="IEntityRepository{TContext}.Update{TEntity}(ICollection{TEntity}, string, DateTime)"/>
-		/// </summary>
-		public Task<IEntityRepository<TContext>> Update<TEntity>(ICollection<TEntity> entities, string updatedBy, DateTime updatedOn) where TEntity : BaseEntity, IUpdated
-		{
-			Array.ForEach(entities.ToArray(), (entity) => entity.Update(updatedBy, updatedOn));
-			DataContext.Set<TEntity>().UpdateRange(entities);
-			return Task.FromResult<IEntityRepository<TContext>>(this);
-		}
-
 		#endregion Methods
-
-		#region Private Methods
-
-		private IQueryable<TEntity> ConvertToQuery<TEntity>(Specification<TEntity> specification) where TEntity : BaseEntity
-		{
-			var query = DataContext.Set<TEntity>().AsQueryable();
-
-			if (specification.AsNoTracking) query = query.AsNoTracking();
-
-			query = specification.Filter(query);
-			query = specification.Modify(query);
-
-			return query;
-		}
-
-		#endregion Private Methods
 	}
 }

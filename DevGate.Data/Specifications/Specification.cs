@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using DevGate.Data.Contexts;
 using DevGate.Domain.Entities;
 using LinqKit;
 using Microsoft.EntityFrameworkCore;
@@ -24,11 +25,6 @@ namespace DevGate.Data.Specifications
 		#region Properties
 
 		/// <summary>
-		/// Indicates whether the entity is traced in the context
-		/// </summary>
-		public bool AsNoTracking { get; private set; }
-
-		/// <summary>
 		/// Indicates whether Distinct modifier has been applied
 		/// </summary>
 		public bool IsDistinct { get; private set; }
@@ -43,9 +39,26 @@ namespace DevGate.Data.Specifications
 		/// </summary>
 		public virtual string Tag { get; }
 
+		/// <summary>
+		/// Indicates whether the entity is traced in the context
+		/// </summary>
+		public bool WithTracking { get; private set; } = true;
+
 		#endregion Properties
 
 		#region Methods
+
+		public virtual IQueryable<TEntity> AsQueryable<TContext>(TContext context) where TContext : IDbContext
+		{
+			var query = context.Set<TEntity>().AsQueryable();
+
+			if (!WithTracking) query = query.AsNoTracking();
+
+			query = Filter(query);
+			query = Modify(query);
+
+			return query;
+		}
 
 		/// <summary>
 		/// Add tag to specification
@@ -69,7 +82,7 @@ namespace DevGate.Data.Specifications
 		{
 			var newSpecification = new AndSpecification<TEntity>(this, specification)
 			{
-				AsNoTracking = AsNoTracking || specification.AsNoTracking
+				WithTracking = WithTracking && specification.WithTracking
 			};
 
 			if (string.IsNullOrWhiteSpace(Tag)) specification._tags.Add(Tag);
@@ -77,6 +90,16 @@ namespace DevGate.Data.Specifications
 			if (string.IsNullOrWhiteSpace(specification.Tag)) specification._tags.Add(Tag);
 
 			return newSpecification;
+		}
+
+		/// <summary>
+		/// Set specification to not
+		/// </summary>
+		/// <returns></returns>
+		public Specification<TEntity> AsNoTracking()
+		{
+			WithTracking = false;
+			return this;
 		}
 
 		/// <summary>
@@ -106,13 +129,19 @@ namespace DevGate.Data.Specifications
 		}
 
 		/// <summary>
+		/// Compile and evaluate the specification
+		/// </summary>
+		/// <returns></returns>
+		public abstract Expression<Func<TEntity, bool>> Evaluate();
+
+		/// <summary>
 		/// Filter the provided <see cref="IQueryable{TEntity}"/> with current specifications
 		/// </summary>
 		/// <param name="query"></param>
 		/// <returns></returns>
 		public virtual IQueryable<TEntity> Filter(IQueryable<TEntity> query)
 		{
-			var filter = ToExpression();
+			var filter = Evaluate();
 
 			if (filter == null) return query;
 
@@ -163,7 +192,7 @@ namespace DevGate.Data.Specifications
 		{
 			var newSpecification = new OrSpecification<TEntity>(this, specification)
 			{
-				AsNoTracking = AsNoTracking || specification.AsNoTracking
+				WithTracking = WithTracking && specification.WithTracking
 			};
 
 			if (string.IsNullOrWhiteSpace(Tag)) specification._tags.Add(Tag);
@@ -206,22 +235,6 @@ namespace DevGate.Data.Specifications
 			else
 				_modifiers.Add((q) => (q as IOrderedQueryable<TEntity>).ThenByDescending(expression));
 
-			return this;
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <returns></returns>
-		public abstract Expression<Func<TEntity, bool>> ToExpression();
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <returns></returns>
-		public Specification<TEntity> WithNoTracking()
-		{
-			AsNoTracking = true;
 			return this;
 		}
 

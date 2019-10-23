@@ -6,7 +6,6 @@ using DevGate.Data.Contexts;
 using DevGate.Data.Other;
 using DevGate.Data.Specifications;
 using DevGate.Domain.Entities;
-using DevGate.Domain.Entities.Audits;
 using Microsoft.Extensions.Logging;
 
 namespace DevGate.Data.Repositories
@@ -47,32 +46,12 @@ namespace DevGate.Data.Repositories
 		Task<IEntityRepository<TContext>> AddAsync<TEntity>(ICollection<TEntity> entities) where TEntity : BaseEntity;
 
 		/// <summary>
-		/// Adds the collection of entites to the <see cref="IDbContext"/> and sets their audit fields
-		/// </summary>
-		/// <typeparam name="TEntity">Entity types</typeparam>
-		/// <param name="entities">Collection of entity objects</param>
-		/// <param name="createdBy"><see cref="ICreated.CreatedBy"/></param>
-		/// <param name="createdOn"><see cref="ICreated.CreatedOn"/></param>
-		/// <returns>Repository instance</returns>
-		Task<IEntityRepository<TContext>> AddAsync<TEntity>(ICollection<TEntity> entities, string createdBy, DateTime createdOn) where TEntity : BaseEntity, ICreated;
-
-		/// <summary>
 		/// Adds the entity into the <see cref="IDbContext"/>
 		/// </summary>
 		/// <typeparam name="TEntity">Entity type</typeparam>
 		/// <param name="entity">Entity object</param>
 		/// <returns>Repository instance</returns>
 		Task<IEntityRepository<TContext>> AddAsync<TEntity>(TEntity entity) where TEntity : BaseEntity;
-
-		/// <summary>
-		/// Adds the entity into the <see cref="IDbContext"/>
-		/// </summary>
-		/// <typeparam name="TEntity">Entity type</typeparam>
-		/// <param name="entity">Entity object</param>
-		/// <param name="createdBy"><see cref="ICreated.CreatedBy"/></param>
-		/// <param name="createdOn"><see cref="ICreated.CreatedOn"/></param>
-		/// <returns>Repository instance</returns>
-		Task<IEntityRepository<TContext>> AddAsync<TEntity>(TEntity entity, string createdBy, DateTime createdOn) where TEntity : BaseEntity, ICreated;
 
 		/// <summary>
 		/// Attach the entities to the <see cref="IDbContext"/>
@@ -95,8 +74,16 @@ namespace DevGate.Data.Repositories
 		/// </summary>
 		/// <typeparam name="TEntity">Entity type</typeparam>
 		/// <param name="specification">Entity specification</param>
-		/// <returns>If entity found, returns an object of the entity, else null.</returns>
-		Task<TEntity> FindAsync<TEntity>(Specification<TEntity> specification) where TEntity : BaseEntity;
+		/// <returns>Finds entity based on primary key</returns>
+		Task<TEntity> FindAsync<TEntity, TProperty>(TProperty primaryKey) where TEntity : BaseEntity;
+
+		/// <summary>
+		/// Get the entity based on the <see cref="Specification{TEntity}"/>
+		/// </summary>
+		/// <typeparam name="TEntity">Entity type</typeparam>
+		/// <param name="specification">Entity specification</param>
+		/// <returns>Returns first entity that matches the specification, else null.</returns>
+		Task<TEntity> GetAsync<TEntity>(Specification<TEntity> specification) where TEntity : BaseEntity;
 
 		/// <summary>
 		/// Returns a collection of entties based on the <see cref="Specification{TEntity}"/>.
@@ -125,32 +112,12 @@ namespace DevGate.Data.Repositories
 		Task<IEntityRepository<TContext>> Remove<TEntity>(TEntity entity) where TEntity : BaseEntity;
 
 		/// <summary>
-		/// Soft deletes the <see cref="NonDeletableEntity"/> by setting the property <see cref="NonDeletableEntity.IsDeleted"/> true, and sets the audit fields
-		/// </summary>
-		/// <typeparam name="TEntity">Entity type</typeparam>
-		/// <param name="entity">Entity object</param>
-		/// <param name="deletedBy"><see cref="NonDeletableEntity.DeletedBy"/></param>
-		/// <param name="deletedOn"><see cref="NonDeletableEntity.DeletedOn"/></param>
-		/// <returns>Repository instance</returns>
-		Task<IEntityRepository<TContext>> Remove<TEntity>(TEntity entity, string deletedBy, DateTime deletedOn) where TEntity : NonDeletableEntity;
-
-		/// <summary>
 		/// Removes a collection of entities from the <see cref="IDbContext"/>
 		/// </summary>
 		/// <typeparam name="TEntity">Entity type</typeparam>
 		/// <param name="entities">Collection of entity objects</param>
 		/// <returns>Repository instance</returns>
 		Task<IEntityRepository<TContext>> Remove<TEntity>(ICollection<TEntity> entities) where TEntity : BaseEntity;
-
-		/// <summary>
-		/// Soft deletes a collection of <see cref="NonDeletableEntity"/> by setting the property <see cref="NonDeletableEntity.IsDeleted"/> true, and sets the audit fields
-		/// </summary>
-		/// <typeparam name="TEntity">Entity type</typeparam>
-		/// <param name="entities">Collection of entity objects</param>
-		/// <param name="deletedBy"><see cref="NonDeletableEntity.DeletedBy"/></param>
-		/// <param name="deletedOn"><see cref="NonDeletableEntity.DeletedOn"/></param>
-		/// <returns>Repository instance</returns>
-		Task<IEntityRepository<TContext>> Remove<TEntity>(ICollection<TEntity> entities, string deletedBy, DateTime deletedOn) where TEntity : NonDeletableEntity;
 
 		/// <summary>
 		/// Restore a soft deleted entity by setting <see cref="NonDeletableEntity.DeletedBy"/> and <see cref="NonDeletableEntity.DeletedOn"/> to null
@@ -164,7 +131,7 @@ namespace DevGate.Data.Repositories
 		/// Restore a collection of soft deleted entities by setting their <see cref="NonDeletableEntity.DeletedBy"/> and <see cref="NonDeletableEntity.DeletedOn"/> to null
 		/// </summary>
 		/// <typeparam name="TEntity">Entity type</typeparam>
-		/// <param name="entity">Entity object</param>
+		/// <param name="entities">Entity object</param>
 		/// <returns>Repository instance</returns>
 		Task<IEntityRepository<TContext>> Restore<TEntity>(ICollection<TEntity> entities) where TEntity : NonDeletableEntity;
 
@@ -191,32 +158,12 @@ namespace DevGate.Data.Repositories
 		Task<IEntityRepository<TContext>> Update<TEntity>(TEntity entity) where TEntity : BaseEntity;
 
 		/// <summary>
-		/// Attach an entity to this context
-		/// </summary>
-		/// <typeparam name="TEntity">Entity type</typeparam>
-		/// <param name="entity">Entity object</param>
-		/// <param name="updatedBy"><see cref="IUpdated.UpdatedBy"/></param>
-		/// <param name="updatedOn"><see cref="IUpdated.UpdatedOn"/></param>
-		/// <returns>Repository instance</returns>
-		Task<IEntityRepository<TContext>> Update<TEntity>(TEntity entity, string updatedBy, DateTime updatedOn) where TEntity : BaseEntity, IUpdated;
-
-		/// <summary>
 		/// Attaches the collection of altered entities to the <see cref="IDbContext"/>
 		/// </summary>
 		/// <typeparam name="TEntity">Entity type</typeparam>
 		/// <param name="entities">Collection of entity objects</param>
 		/// <returns>Repository instance</returns>
 		Task<IEntityRepository<TContext>> Update<TEntity>(ICollection<TEntity> entities) where TEntity : BaseEntity;
-
-		/// <summary>
-		/// Attaches and updates the entity to the <see cref="IDbContext"/>
-		/// </summary>
-		/// <typeparam name="TEntity">Entity type</typeparam>
-		/// <param name="entities">Collection of entity objects</param>
-		/// <param name="updatedBy"><see cref="IUpdated.UpdatedBy"/></param>
-		/// <param name="updatedOn"><see cref="IUpdated.UpdatedOn"/></param>
-		/// <returns>Repository instance</returns>
-		Task<IEntityRepository<TContext>> Update<TEntity>(ICollection<TEntity> entities, string updatedBy, DateTime updatedOn) where TEntity : BaseEntity, IUpdated;
 
 		#endregion Method
 	}

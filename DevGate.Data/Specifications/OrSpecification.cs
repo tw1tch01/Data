@@ -26,12 +26,12 @@ namespace DevGate.Data.Specifications
 		}
 
 		/// <summary>
-		/// Overrides base <see cref="Specification{TEntity}.ToExpression"/> to return OR combination of two <see cref="Specification{TEntity}"/>
+		/// Overrides base <see cref="Specification{TEntity}.Evaluate"/> to return OR combination of two <see cref="Specification{TEntity}"/>
 		/// </summary>
 		/// <returns></returns>
-		public override Expression<Func<TEntity, bool>> ToExpression()
+		public override Expression<Func<TEntity, bool>> Evaluate()
 		{
-			return _left.ToExpression().Or(_right.ToExpression());
+			return _left.Evaluate().Or(_right.Evaluate());
 		}
 	}
 }

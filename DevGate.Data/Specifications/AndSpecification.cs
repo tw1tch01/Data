@@ -26,11 +26,11 @@ namespace DevGate.Data.Specifications
 		}
 
 		/// <summary>
-		/// Overrides base <see cref="Specification{TEntity}.ToExpression"/> to return AND product of two specified <see cref="Specification{TEntity}"/>
+		/// Overrides base <see cref="Specification{TEntity}.Evaluate"/> to return AND product of two specified <see cref="Specification{TEntity}"/>
 		/// </summary>
-		public override Expression<Func<TEntity, bool>> ToExpression()
+		public override Expression<Func<TEntity, bool>> Evaluate()
 		{
-			return _left.ToExpression().And(_right.ToExpression());
+			return _left.Evaluate().And(_right.Evaluate());
 		}
 	}
 }

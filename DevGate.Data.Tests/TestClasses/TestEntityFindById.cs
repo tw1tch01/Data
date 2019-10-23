@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
 using DevGate.Data.Specifications;
+using DevGate.Domain.Entities;
 
 namespace DevGate.Data.Tests.TestClasses
 {
@@ -13,7 +14,7 @@ namespace DevGate.Data.Tests.TestClasses
 			_id = id;
 		}
 
-		public override Expression<Func<TestEntity, bool>> ToExpression()
+		public override Expression<Func<TestEntity, bool>> Evaluate()
 		{
 			return entity => entity.Id == _id;
 		}
