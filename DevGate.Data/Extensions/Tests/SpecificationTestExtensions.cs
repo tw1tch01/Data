@@ -14,7 +14,7 @@ namespace DevGate.Data.Extensions.Tests
 		/// <param name="specification">Specification instance</param>
 		/// <param name="entity">Entity instance</param>
 		/// <returns>Whether entity is satisfied by Specifcation</returns>
-		public static bool Satifies<TEntity>(this Specification<TEntity> specification, TEntity entity) where TEntity : BaseEntity
+		public static bool Satisfies<TEntity>(this Specification<TEntity> specification, TEntity entity) where TEntity : BaseEntity
 		{
 			return specification.Evaluate().Compile()(entity);
 		}

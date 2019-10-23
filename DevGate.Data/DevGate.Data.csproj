@@ -7,6 +7,7 @@
     <Description>Enchancement library intended for 'Persistence' layer.</Description>
     <PackageTags>Entity Framework, Specification, Repository, DbContext</PackageTags>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

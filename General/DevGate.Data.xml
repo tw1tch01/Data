@@ -173,7 +173,7 @@
             Testing extension methods for <see cref="T:DevGate.Data.Specifications.Specification`1"/>
             </summary>
         </member>
-        <member name="M:DevGate.Data.Extensions.Tests.SpecificationTestExtensions.Satifies``1(DevGate.Data.Specifications.Specification{``0},``0)">
+        <member name="M:DevGate.Data.Extensions.Tests.SpecificationTestExtensions.Satisfies``1(DevGate.Data.Specifications.Specification{``0},``0)">
             <summary>
             Determines if the specification satisfies the entity
             </summary>
@@ -291,9 +291,14 @@
             See <see cref="M:DevGate.Data.Repositories.IEntityRepository`1.Attach``1(System.Collections.Generic.ICollection{``0})"/>
             </summary>
         </member>
-        <member name="M:DevGate.Data.Repositories.EntityRepository`1.FindAsync``1(DevGate.Data.Specifications.Specification{``0})">
+        <member name="M:DevGate.Data.Repositories.EntityRepository`1.FindAsync``2(``1)">
             <summary>
-            See <see cref="M:DevGate.Data.Repositories.IEntityRepository`1.FindAsync``1(DevGate.Data.Specifications.Specification{``0})"/>
+            See <see cref="!:IEntityRepository&lt;TContext&gt;.FindAsync&lt;TEntity&gt;(Specification&lt;TEntity&gt;)"/>
+            </summary>
+        </member>
+        <member name="M:DevGate.Data.Repositories.EntityRepository`1.GetAsync``1(DevGate.Data.Specifications.Specification{``0})">
+            <summary>
+            See <see cref="M:DevGate.Data.Repositories.IEntityRepository`1.GetAsync``1(DevGate.Data.Specifications.Specification{``0})"/>
             </summary>
         </member>
         <member name="M:DevGate.Data.Repositories.EntityRepository`1.ListAsync``1(DevGate.Data.Specifications.Specification{``0})">
@@ -399,13 +404,21 @@
             <param name="entities">Collection of entity objects</param>
             <returns>Repository instance</returns>
         </member>
-        <member name="M:DevGate.Data.Repositories.IEntityRepository`1.FindAsync``1(DevGate.Data.Specifications.Specification{``0})">
+        <member name="M:DevGate.Data.Repositories.IEntityRepository`1.FindAsync``2(``1)">
             <summary>
             Find the entity based on the <see cref="T:DevGate.Data.Specifications.Specification`1"/>
             </summary>
             <typeparam name="TEntity">Entity type</typeparam>
             <param name="specification">Entity specification</param>
-            <returns>If entity found, returns an object of the entity, else null.</returns>
+            <returns>Finds entity based on primary key</returns>
+        </member>
+        <member name="M:DevGate.Data.Repositories.IEntityRepository`1.GetAsync``1(DevGate.Data.Specifications.Specification{``0})">
+            <summary>
+            Get the entity based on the <see cref="T:DevGate.Data.Specifications.Specification`1"/>
+            </summary>
+            <typeparam name="TEntity">Entity type</typeparam>
+            <param name="specification">Entity specification</param>
+            <returns>Returns first entity that matches the specification, else null.</returns>
         </member>
         <member name="M:DevGate.Data.Repositories.IEntityRepository`1.ListAsync``1(DevGate.Data.Specifications.Specification{``0})">
             <summary>
@@ -596,9 +609,9 @@
             <param name="left"></param>
             <param name="right"></param>
         </member>
-        <member name="M:DevGate.Data.Specifications.AndSpecification`1.ToExpression">
+        <member name="M:DevGate.Data.Specifications.AndSpecification`1.Evaluate">
             <summary>
-            Overrides base <see cref="M:DevGate.Data.Specifications.Specification`1.ToExpression"/> to return AND product of two specified <see cref="T:DevGate.Data.Specifications.Specification`1"/>
+            Overrides base <see cref="M:DevGate.Data.Specifications.Specification`1.Evaluate"/> to return AND product of two specified <see cref="T:DevGate.Data.Specifications.Specification`1"/>
             </summary>
         </member>
         <member name="T:DevGate.Data.Specifications.OrSpecification`1">
@@ -614,9 +627,9 @@
             <param name="left"></param>
             <param name="right"></param>
         </member>
-        <member name="M:DevGate.Data.Specifications.OrSpecification`1.ToExpression">
+        <member name="M:DevGate.Data.Specifications.OrSpecification`1.Evaluate">
             <summary>
-            Overrides base <see cref="M:DevGate.Data.Specifications.Specification`1.ToExpression"/> to return OR combination of two <see cref="T:DevGate.Data.Specifications.Specification`1"/>
+            Overrides base <see cref="M:DevGate.Data.Specifications.Specification`1.Evaluate"/> to return OR combination of two <see cref="T:DevGate.Data.Specifications.Specification`1"/>
             </summary>
             <returns></returns>
         </member>
@@ -625,11 +638,6 @@
             Entity-based specifications designed after the Specification and Repository pattern, to be used with <see cref="N:Microsoft.EntityFrameworkCore"/>
             </summary>
             <typeparam name="TEntity"></typeparam>
-        </member>
-        <member name="P:DevGate.Data.Specifications.Specification`1.AsNoTracking">
-            <summary>
-            Indicates whether the entity is traced in the context
-            </summary>
         </member>
         <member name="P:DevGate.Data.Specifications.Specification`1.IsDistinct">
             <summary>
@@ -646,6 +654,11 @@
             Tag for the specification
             </summary>
         </member>
+        <member name="P:DevGate.Data.Specifications.Specification`1.WithTracking">
+            <summary>
+            Indicates whether the entity is traced in the context
+            </summary>
+        </member>
         <member name="M:DevGate.Data.Specifications.Specification`1.AddTag(System.String)">
             <summary>
             Add tag to specification
@@ -660,6 +673,12 @@
             <param name="specification"></param>
             <returns></returns>
         </member>
+        <member name="M:DevGate.Data.Specifications.Specification`1.AsNoTracking">
+            <summary>
+            Set specification to not
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:DevGate.Data.Specifications.Specification`1.Distinct">
             <summary>
             Adds <see cref="T:System.Linq.IQueryable`1"/> modifier to the specification that returns a distinct collection
@@ -669,6 +688,12 @@
         <member name="M:DevGate.Data.Specifications.Specification`1.DistinctBy``1(System.Linq.Expressions.Expression{System.Func{`0,``0}})">
             <summary>
             Adds <see cref="T:System.Linq.IQueryable`1"/> modifier to the specification that returns a distinct collection based on the property
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:DevGate.Data.Specifications.Specification`1.Evaluate">
+            <summary>
+            Compile and evaluate the specification
             </summary>
             <returns></returns>
         </member>
@@ -722,18 +747,6 @@
             </summary>
             <typeparam name="TProperty"></typeparam>
             <param name="expression"></param>
-            <returns></returns>
-        </member>
-        <member name="M:DevGate.Data.Specifications.Specification`1.ToExpression">
-            <summary>
-            
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:DevGate.Data.Specifications.Specification`1.WithNoTracking">
-            <summary>
-            
-            </summary>
             <returns></returns>
         </member>
     </members>

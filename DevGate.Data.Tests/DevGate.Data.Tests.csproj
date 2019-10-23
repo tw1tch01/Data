@@ -28,12 +28,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ExtensionTests\" />
-    <Folder Include="SpecificationTests\" />
-    <Folder Include="SeedTests\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\DevGate.Data\DevGate.Data.csproj" />
   </ItemGroup>
 

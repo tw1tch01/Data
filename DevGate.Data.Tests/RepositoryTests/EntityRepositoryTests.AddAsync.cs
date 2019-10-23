@@ -26,13 +26,13 @@ namespace DevGate.Data.Tests.RepositoryTests
 			var mockDbSet = new Mock<DbSet<BaseEntity>>();
 			var mockEntity = new Mock<BaseEntity>();
 			var mockDbContext = new Mock<IDbContext>();
-			var entityRepo = CreateRepo(mockDbContext);
+			var repo = CreateRepo(mockDbContext);
 
 			mockDbContext.Setup(c => c.Set<BaseEntity>())
 				.Returns(mockDbSet.Object);
 
 			// Act
-			await entityRepo.AddAsync(mockEntity.Object);
+			await repo.AddAsync(mockEntity.Object);
 
 			// Assert
 			Assert.Multiple(() =>
@@ -49,13 +49,13 @@ namespace DevGate.Data.Tests.RepositoryTests
 			var mockDbSet = new Mock<DbSet<BaseEntity>>();
 			var mockEntities = new Mock<ICollection<BaseEntity>>();
 			var mockDbContext = new Mock<IDbContext>();
-			var entityRepo = CreateRepo(mockDbContext);
+			var repo = CreateRepo(mockDbContext);
 
 			mockDbContext.Setup(c => c.Set<BaseEntity>())
 				.Returns(mockDbSet.Object);
 
 			// Act
-			await entityRepo.AddAsync(mockEntities.Object);
+			await repo.AddAsync(mockEntities.Object);
 
 			// Assert
 			Assert.Multiple(() =>
@@ -144,13 +144,13 @@ namespace DevGate.Data.Tests.RepositoryTests
 		//	var mockDbSet = new Mock<DbSet<TestCreatedEntity>>();
 		//	var mockCreatedEntity = new Mock<TestCreatedEntity>();
 		//	var mockDbContext = new Mock<TestDbContext>();
-		//	var entityRepo = CreateRepo(mockDbContext);
+		//	var repo = CreateRepo(mockDbContext);
 
 		//	mockDbContext.Setup(c => c.Set<TestCreatedEntity>())
 		//		.Returns(mockDbSet.Object);
 
 		//	// Act
-		//	await entityRepo.AddAsync(mockCreatedEntity.Object, _fixture.Create<string>(), _fixture.Create<DateTime>());
+		//	await repo.AddAsync(mockCreatedEntity.Object, _fixture.Create<string>(), _fixture.Create<DateTime>());
 
 		//	// Assert
 		//	Assert.Multiple(() =>
@@ -222,13 +222,13 @@ namespace DevGate.Data.Tests.RepositoryTests
 		//	var createdEntities = new List<TestCreatedEntity> { mockCreatedEntity1.Object, mockCreatedEntity2.Object };
 
 		//	var mockDbContext = new Mock<TestDbContext>();
-		//	var entityRepo = CreateRepo(mockDbContext);
+		//	var repo = CreateRepo(mockDbContext);
 
 		//	mockDbContext.Setup(c => c.Set<TestCreatedEntity>())
 		//		.Returns(mockDbSet.Object);
 
 		//	// Act
-		//	await entityRepo.AddAsync(createdEntities, _fixture.Create<string>(), _fixture.Create<DateTime>());
+		//	await repo.AddAsync(createdEntities, _fixture.Create<string>(), _fixture.Create<DateTime>());
 
 		//	// Assert
 		//	Assert.Multiple(() =>

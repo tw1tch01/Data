@@ -6,7 +6,6 @@ using DevGate.Data.Specifications;
 using DevGate.Data.Tests.TestClasses;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using MockQueryable.Moq;
 using Moq;
 using NUnit.Framework;
 
@@ -18,7 +17,6 @@ namespace DevGate.Data.Tests.RepositoryTests
 		public async Task GetAsync_WhenSpecificationDoesNotMatchEntity_ReturnsNull()
 		{
 			// Arrange
-			var testEntity = new TestEntity { Id = _fixture.Create<int>() };
 			var mockSpecification = new Mock<Specification<TestEntity>>();
 			var options = new DbContextOptionsBuilder<TestDbContext>()
 				.UseInMemoryDatabase(databaseName: "TestEntity")
@@ -26,16 +24,16 @@ namespace DevGate.Data.Tests.RepositoryTests
 
 			using var context = new TestDbContext(options);
 
-			context.TestEntities.Add(new TestEntity { Id = _fixture.Create<int>() });
+			context.Add(new TestEntity { Id = _fixture.Create<int>() });
 			context.SaveChanges();
 
-			var mockTestEntities = context.TestEntities.AsQueryable().BuildMock();
+			var id = _fixture.Create<int>();
 
 			mockSpecification.Setup(s => s.Evaluate())
-				.Returns(entity => entity.Id == testEntity.Id);
+				.Returns(entity => entity.Id == id);
 
 			mockSpecification.Setup(s => s.AsQueryable(context))
-				.Returns(mockTestEntities.Object);
+				.Returns(context.TestEntities.Where(e => e.Id == id).AsQueryable());
 
 			var repo = new EntityRepository<TestDbContext>(context, new Mock<ILogger<TestDbContext>>().Object);
 
@@ -50,7 +48,8 @@ namespace DevGate.Data.Tests.RepositoryTests
 		public async Task GetAsync_WhenSpecificationMatchesEntity_ReturnsFirstEntityThatMatchesSpecification()
 		{
 			// Arrange
-			var testEntity = new TestEntity { Id = _fixture.Create<int>() };
+			var id = _fixture.Create<int>();
+			var testEntity = new TestEntity { Id = id };
 			var mockSpecification = new Mock<Specification<TestEntity>>();
 
 			var options = new DbContextOptionsBuilder<TestDbContext>()
@@ -59,16 +58,14 @@ namespace DevGate.Data.Tests.RepositoryTests
 
 			using var context = new TestDbContext(options);
 
-			context.TestEntities.Add(testEntity);
+			context.Add(testEntity);
 			context.SaveChanges();
 
-			var mockTestEntities = context.TestEntities.AsQueryable().BuildMock();
-
 			mockSpecification.Setup(s => s.Evaluate())
-				.Returns(entity => entity.Id == testEntity.Id);
+				.Returns(entity => entity.Id == id);
 
 			mockSpecification.Setup(s => s.AsQueryable(context))
-				.Returns(mockTestEntities.Object);
+				.Returns(context.Set<TestEntity>().Where(e => e.Id == id).AsQueryable());
 
 			var repo = new EntityRepository<TestDbContext>(context, new Mock<ILogger<TestDbContext>>().Object);
 
