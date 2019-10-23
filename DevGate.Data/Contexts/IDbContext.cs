@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using DevGate.Data.Other;
 using DevGate.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -17,14 +18,20 @@ namespace DevGate.Data.Contexts
 		ChangeTracker ChangeTracker { get; }
 
 		/// <summary>
-		/// Saves the <see cref="DbContext" /> changes
+		/// See <see cref="UserContextScope"/>
 		/// </summary>
-		/// <param name="cancellationToken"></param>
-		/// <returns></returns>
-		Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
+		UserContextScope UserScope { get; }
 
 		/// <summary>
-		/// Creates a <see cref="DbSet{TEntity}"/> to query and save instances of TEntity. />
+		/// Saves the <see cref="DbContext" /> changes
+		/// </summary>
+		/// <param name="acceptAllChangesOnSuccess"></param>
+		/// <param name="cancellationToken"></param>
+		/// <returns></returns>
+		Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default);
+
+		/// <summary>
+		/// Creates a <see cref="DbSet{TEntity}"/> to query and save instances of TEntity. Implement as a `new` method which returns the base <see cref="DbContext.Set{TEntity}"/> method
 		/// </summary>
 		/// <typeparam name="TEntity">Entity type in the set</typeparam>
 		/// <returns>Set of given entity type</returns>

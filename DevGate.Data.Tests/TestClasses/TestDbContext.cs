@@ -1,4 +1,5 @@
 ﻿using DevGate.Data.Contexts;
+using DevGate.Data.Other;
 using DevGate.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,10 +15,16 @@ namespace DevGate.Data.Tests.TestClasses
 		{
 		}
 
-		public virtual DbSet<TestEntity> TestEntities { get; set; }
 		public virtual DbSet<TestCreatedEntity> TestCreatedEntities { get; set; }
 
-		public virtual DbSet<TEntity> Set<TEntity>() where TEntity : BaseEntity
+		public virtual DbSet<TestEntity> TestEntities { get; set; }
+
+		public UserContextScope UserScope { get; } = new UserContextScope
+		{
+			Username = "test-user"
+		};
+
+		public new DbSet<TEntity> Set<TEntity>() where TEntity : BaseEntity
 		{
 			return base.Set<TEntity>();
 		}

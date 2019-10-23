@@ -6,19 +6,11 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DevGate.Data.Tests.TestClasses
 {
-	public class TestCreatedEntity : BaseEntity, ICreated
+	public class TestCreatedEntity : BaseEntity, ICreatedAudit
 	{
+		public string CreatedBy { get; set; }
+		public DateTime CreatedOn { get; set; }
 		public int Id { get; set; }
-
-		public string CreatedBy { get; private set; }
-
-		public DateTime CreatedOn { get; private set; }
-
-		public virtual void Create(string createdBy, DateTime createdOn)
-		{
-			CreatedBy = createdBy;
-			CreatedOn = createdOn;
-		}
 	}
 
 	public class TestCreatedEntityConfiguration : IEntityTypeConfiguration<TestCreatedEntity>
