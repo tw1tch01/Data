@@ -11,13 +11,13 @@ namespace Data.Repositories
 {
     public interface IContextRepository<TContext> where TContext : IAuditedContext
     {
-        Task<IContextRepository<TContext>> AddAsync<TEntity>(TEntity entity) where TEntity : class;
+        Task AddAsync<TEntity>(TEntity entity) where TEntity : class;
 
-        Task<IContextRepository<TContext>> AddRangeAsync<TEntity>(ICollection<TEntity> entities) where TEntity : class;
+        Task AddRangeAsync<TEntity>(ICollection<TEntity> entities) where TEntity : class;
 
-        IContextRepository<TContext> Attach<TEntity>(TEntity entity) where TEntity : class;
+        void Attach<TEntity>(TEntity entity) where TEntity : class;
 
-        IContextRepository<TContext> AttachRange<TEntity>(ICollection<TEntity> entities) where TEntity : class;
+        void AttachRange<TEntity>(ICollection<TEntity> entities) where TEntity : class;
 
         Task<TEntity> FindByPrimaryKeyAsync<TEntity, TProperty>(TProperty primaryKey) where TEntity : class;
 
@@ -31,9 +31,9 @@ namespace Data.Repositories
 
         Task<TResult> QueryAsync<TEntity, TResult>(LinqSpecification<TEntity> specification, Func<IQueryable<TEntity>, Task<TResult>> resolver) where TEntity : class;
 
-        IContextRepository<TContext> Remove<TEntity>(TEntity entity) where TEntity : class;
+        void Remove<TEntity>(TEntity entity) where TEntity : class;
 
-        IContextRepository<TContext> RemoveRange<TEntity>(ICollection<TEntity> entities) where TEntity : class;
+        void RemoveRange<TEntity>(ICollection<TEntity> entities) where TEntity : class;
 
         Task<int> SaveAsync();
     }

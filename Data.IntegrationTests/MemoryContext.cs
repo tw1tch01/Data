@@ -11,19 +11,18 @@ namespace Data.IntegrationTests
 {
     internal class MemoryContext : DbContext, IAuditedContext
     {
-        private const string CreatedBy = "Unit-Tests";
-        private const string CreatedProcess = "/Unit-Tests";
-        private const string ModifiedBy = "Unit-Tests";
-        private const string ModifiedProcess = "/Unit-Tests";
+        private const string CreatedBy = "IntegrationTests";
+        private const string CreatedProcess = "/IntegrationTests";
+        private const string ModifiedBy = "IntegrationTests";
+        private const string ModifiedProcess = "/IntegrationTests";
         private readonly Fixture _fixture = new Fixture();
 
-        public MemoryContext() : base(new DbContextOptionsBuilder<MemoryContext>()
-                .UseInMemoryDatabase(Guid.NewGuid().ToString())
-                .Options)
+        public MemoryContext()
+            : base(new DbContextOptionsBuilder<MemoryContext>().UseInMemoryDatabase(Guid.NewGuid().ToString()).Options)
         {
             ContextScope = new ContextScope();
             ContextScope.StateActions.Add(EntityState.Added, SetCreatedAuditFields);
-            ContextScope.StateActions.Add(EntityState.Modified, SetCreatedAuditFields);
+            ContextScope.StateActions.Add(EntityState.Modified, SetModifiedAuditFields);
         }
 
         public ContextScope ContextScope { get; }
@@ -49,16 +48,16 @@ namespace Data.IntegrationTests
 
         private void SetCreatedAuditFields(EntityEntry entity)
         {
-            entity.TrySetProperty(nameof(AuditedEntity.CreatedBy), CreatedBy);
-            entity.TrySetProperty(nameof(AuditedEntity.CreatedOn), DateTime.UtcNow);
-            entity.TrySetProperty(nameof(AuditedEntity.CreatedProcess), CreatedProcess);
+            entity.Entity.TrySetProperty(nameof(AuditedEntity.CreatedBy), CreatedBy)
+                         .TrySetProperty(nameof(AuditedEntity.CreatedOn), DateTime.UtcNow)
+                         .TrySetProperty(nameof(AuditedEntity.CreatedProcess), CreatedProcess);
         }
 
         private void SetModifiedAuditFields(EntityEntry entity)
         {
-            entity.TrySetProperty(nameof(AuditedEntity.LastModifiedBy), ModifiedBy);
-            entity.TrySetProperty(nameof(AuditedEntity.LastModifiedOn), DateTime.UtcNow);
-            entity.TrySetProperty(nameof(AuditedEntity.LastModifiedProcess), ModifiedProcess);
+            entity.Entity.TrySetProperty(nameof(AuditedEntity.LastModifiedBy), ModifiedBy)
+                         .TrySetProperty(nameof(AuditedEntity.LastModifiedOn), DateTime.UtcNow)
+                         .TrySetProperty(nameof(AuditedEntity.LastModifiedProcess), ModifiedProcess);
         }
     }
 }

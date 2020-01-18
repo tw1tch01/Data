@@ -398,6 +398,21 @@ namespace Data.IntegrationTests.RepositoryTests
 
         #endregion RemoveRange
 
+        #region SaveChangesAsync
+
+        [Test]
+        public async Task SaveChangesAsync_WithAddedEntity_SavesToSet()
+        {
+            var entity = new AuditedEntity();
+
+            await _memoryDb.Repository.AddAsync(entity);
+            await _memoryDb.Repository.SaveAsync();
+
+            Assert.Contains(entity, _memoryDb.Context.Set<AuditedEntity>().ToList());
+        }
+
+        #endregion
+
         internal class PlainSpec : LinqSpecification<AuditedEntity>
         {
             public override Expression<Func<AuditedEntity, bool>> AsExpression()

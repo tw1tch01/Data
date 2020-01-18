@@ -38,40 +38,36 @@ namespace Data.Repositories
 
         #region Methods
 
-        public async Task<IContextRepository<TContext>> AddAsync<TEntity>(TEntity entity) where TEntity : class
+        public async Task AddAsync<TEntity>(TEntity entity) where TEntity : class
         {
             if (entity == null) throw new ArgumentNullException(nameof(entity));
 
             await _dataContext.Set<TEntity>().AddAsync(entity);
-            return this;
         }
 
-        public async Task<IContextRepository<TContext>> AddRangeAsync<TEntity>(ICollection<TEntity> entities) where TEntity : class
+        public async Task AddRangeAsync<TEntity>(ICollection<TEntity> entities) where TEntity : class
         {
             if (entities == null) throw new ArgumentNullException(nameof(entities));
 
             if (!entities.Any()) throw new ArgumentException($"Cannot add an empty collection. (Parameter '{nameof(entities)}')");
 
             await _dataContext.Set<TEntity>().AddRangeAsync(entities);
-            return this;
         }
 
-        public IContextRepository<TContext> Attach<TEntity>(TEntity entity) where TEntity : class
+        public void Attach<TEntity>(TEntity entity) where TEntity : class
         {
             if (entity == null) throw new ArgumentNullException(nameof(entity));
 
             _dataContext.Set<TEntity>().Attach(entity);
-            return this;
         }
 
-        public IContextRepository<TContext> AttachRange<TEntity>(ICollection<TEntity> entities) where TEntity : class
+        public void AttachRange<TEntity>(ICollection<TEntity> entities) where TEntity : class
         {
             if (entities == null) throw new ArgumentNullException(nameof(entities));
 
             if (!entities.Any()) throw new ArgumentException($"Cannot attach an empty collection. (Parameter '{nameof(entities)}')");
 
             _dataContext.Set<TEntity>().AttachRange(entities);
-            return this;
         }
 
         public async Task<TEntity> FindByPrimaryKeyAsync<TEntity, TProperty>(TProperty primaryKey) where TEntity : class
@@ -135,22 +131,20 @@ namespace Data.Repositories
             return await resolver(query);
         }
 
-        public IContextRepository<TContext> Remove<TEntity>(TEntity entity) where TEntity : class
+        public void Remove<TEntity>(TEntity entity) where TEntity : class
         {
             if (entity == null) throw new ArgumentNullException(nameof(entity));
 
             _dataContext.Set<TEntity>().Remove(entity);
-            return this;
         }
 
-        public IContextRepository<TContext> RemoveRange<TEntity>(ICollection<TEntity> entities) where TEntity : class
+        public void RemoveRange<TEntity>(ICollection<TEntity> entities) where TEntity : class
         {
             if (entities == null) throw new ArgumentNullException(nameof(entities));
 
             if (!entities.Any()) throw new ArgumentException($"Cannot remove an empty collection. (Parameter '{nameof(entities)}')");
 
             _dataContext.Set<TEntity>().RemoveRange(entities);
-            return this;
         }
 
         public async Task<int> SaveAsync()
