@@ -1,5 +1,7 @@
 /.vs/*
-/DevGate.Data/bin/*
-/DevGate.Data/obj/*
-/DevGate.Data.Tests/bin/*
-/DevGate.Data.Tests/obj/*
+/Data/bin/*
+/Data/obj/*
+/Data.IntegrationTests/bin/*
+/Data.IntegrationTests/obj/*
+/Data.UnitTests/bin/*
+/Data.UnitTests/obj/*

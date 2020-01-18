@@ -1,2 +1,3 @@
-# DevGate.Data
-Enhancement library for project's 'Persistence' layer
+# Data
+
+This library can be used as an enhancement to a project's Data Access layer
