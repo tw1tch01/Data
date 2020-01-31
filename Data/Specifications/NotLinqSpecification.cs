@@ -11,6 +11,9 @@ namespace Data.Specifications
         public NotLinqSpecification(LinqSpecification<TType> spec)
         {
             _spec = spec ?? throw new ArgumentNullException(nameof(spec));
+            IsTracked = spec.IsTracked;
+            IsDistinct = spec.IsDistinct;
+            Modifiers = spec.Modifiers;
         }
 
         public override Expression<Func<TType, bool>> AsExpression()

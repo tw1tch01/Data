@@ -33,8 +33,8 @@ namespace Data.UnitTests.Specifications
 
             Assert.Multiple(() =>
             {
-                Assert.AreEqual(1, mockSpecification.Object.Modifers.Count);
-                Assert.Contains(query, mockSpecification.Object.Modifers.ToList());
+                Assert.AreEqual(1, mockSpecification.Object.Modifiers.Count);
+                Assert.Contains(query, mockSpecification.Object.Modifiers.ToList());
             });
         }
 
@@ -49,7 +49,7 @@ namespace Data.UnitTests.Specifications
 
             mockSpecification.Object.Distinct();
 
-            Assert.AreEqual(1, mockSpecification.Object.Modifers.Count);
+            Assert.AreEqual(1, mockSpecification.Object.Modifiers.Count);
         }
 
         #endregion Distinct
@@ -63,7 +63,7 @@ namespace Data.UnitTests.Specifications
 
             mockSpecification.Object.DistinctBy(s => s.Length);
 
-            Assert.AreEqual(1, mockSpecification.Object.Modifers.Count);
+            Assert.AreEqual(1, mockSpecification.Object.Modifiers.Count);
         }
 
         #endregion DistinctBy
@@ -77,7 +77,7 @@ namespace Data.UnitTests.Specifications
 
             mockSpecification.Object.Include(s => s.Length);
 
-            Assert.AreEqual(1, mockSpecification.Object.Modifers.Count);
+            Assert.AreEqual(1, mockSpecification.Object.Modifiers.Count);
         }
 
         #endregion Include
@@ -91,7 +91,7 @@ namespace Data.UnitTests.Specifications
 
             mockSpecification.Object.OrderBy(s => s.Length);
 
-            Assert.AreEqual(1, mockSpecification.Object.Modifers.Count);
+            Assert.AreEqual(1, mockSpecification.Object.Modifiers.Count);
         }
 
         [Test]
@@ -102,7 +102,7 @@ namespace Data.UnitTests.Specifications
             mockSpecification.Object.OrderBy(s => s.Length);
             mockSpecification.Object.OrderBy(s => s.Length);
 
-            Assert.AreEqual(2, mockSpecification.Object.Modifers.Count);
+            Assert.AreEqual(2, mockSpecification.Object.Modifiers.Count);
             //Assert.AreEqual(typeof(Func<IOrderedQueryable<string>, IQueryable<string>>), mockSpecification.Object.PreModifers.First().GetType());
             //Assert.AreEqual(typeof(Func<IOrderedQueryable<string>, IQueryable<string>>), mockSpecification.Object.PreModifers.Last().GetType());
         }
@@ -118,7 +118,7 @@ namespace Data.UnitTests.Specifications
 
             mockSpecification.Object.OrderByDescending(s => s.Length);
 
-            Assert.AreEqual(1, mockSpecification.Object.Modifers.Count);
+            Assert.AreEqual(1, mockSpecification.Object.Modifiers.Count);
         }
 
         [Test]
@@ -129,7 +129,7 @@ namespace Data.UnitTests.Specifications
             mockSpecification.Object.OrderByDescending(s => s.Length);
             mockSpecification.Object.OrderByDescending(s => s.Length);
 
-            Assert.AreEqual(2, mockSpecification.Object.Modifers.Count);
+            Assert.AreEqual(2, mockSpecification.Object.Modifiers.Count);
             //Assert.AreEqual(typeof(Func<IOrderedQueryable<string>, IQueryable<string>>), mockSpecification.Object.PreModifers.First().GetType());
             //Assert.AreEqual(typeof(Func<IOrderedQueryable<string>, IQueryable<string>>), mockSpecification.Object.PreModifers.Last().GetType());
         }

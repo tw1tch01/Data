@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Linq.Expressions;
 using LinqKit;
 
@@ -13,6 +14,9 @@ namespace Data.Specifications
         {
             _leftSpec = leftSpec ?? throw new ArgumentNullException(nameof(leftSpec));
             _rightSpec = rightSpec ?? throw new ArgumentNullException(nameof(rightSpec));
+            IsTracked = leftSpec.IsTracked || rightSpec.IsTracked;
+            IsDistinct = leftSpec.IsDistinct || rightSpec.IsDistinct;
+            Modifiers = leftSpec.Modifiers.Union(rightSpec.Modifiers).ToList();
         }
 
         public override Expression<Func<TType, bool>> AsExpression()

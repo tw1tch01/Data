@@ -11,9 +11,9 @@ namespace Data.Specifications
     {
         #region Properties
 
-        public bool IsDistinct { get; private set; }
-        public ICollection<Func<IQueryable<TType>, IQueryable<TType>>> Modifers { get; } = new List<Func<IQueryable<TType>, IQueryable<TType>>>();
-        public bool IsTracked { get; private set; } = true;
+        public bool IsDistinct { get; protected set; }
+        public ICollection<Func<IQueryable<TType>, IQueryable<TType>>> Modifiers { get; protected set; } = new List<Func<IQueryable<TType>, IQueryable<TType>>>();
+        public bool IsTracked { get; protected set; } = true;
 
         #endregion Properties
 
@@ -28,7 +28,7 @@ namespace Data.Specifications
 
         public LinqSpecification<TType> AddQuery(Func<IQueryable<TType>, IQueryable<TType>> query)
         {
-            Modifers.Add(query);
+            Modifiers.Add(query);
             return this;
         }
 
@@ -36,7 +36,7 @@ namespace Data.Specifications
         {
             if (IsDistinct) return this;
 
-            Modifers.Add((IQueryable<TType> q) => q.Distinct());
+            Modifiers.Add((IQueryable<TType> q) => q.Distinct());
             IsDistinct = true;
             return this;
         }
@@ -45,7 +45,7 @@ namespace Data.Specifications
         {
             if (IsDistinct) return this;
 
-            Modifers.Add((IQueryable<TType> q) => q.GroupBy(property).Select(x => x.FirstOrDefault()));
+            Modifiers.Add((IQueryable<TType> q) => q.GroupBy(property).Select(x => x.FirstOrDefault()));
             IsDistinct = true;
             return this;
         }
@@ -54,7 +54,7 @@ namespace Data.Specifications
         {
             if (property == null) throw new ArgumentNullException(nameof(property));
 
-            Modifers.Add((q) => q.Include(property));
+            Modifiers.Add((q) => q.Include(property));
             return this;
         }
 
@@ -62,16 +62,16 @@ namespace Data.Specifications
         {
             if (property == null) throw new ArgumentNullException(nameof(property));
 
-            var isOrderBy = Modifers.LastOrDefault(m => m is IOrderedQueryable<TType>) != null;
+            var isOrderBy = Modifiers.LastOrDefault(m => m is IOrderedQueryable<TType>) != null;
             if (!isOrderBy)
             {
                 IOrderedQueryable<TType> orderByQuery(IQueryable<TType> q) => q.OrderBy(property);
-                Modifers.Add(orderByQuery);
+                Modifiers.Add(orderByQuery);
             }
             else
             {
                 IOrderedQueryable<TType> thenByQuery(IQueryable<TType> q) => ((IOrderedQueryable<TType>)q).ThenBy(property);
-                Modifers.Add(thenByQuery);
+                Modifiers.Add(thenByQuery);
             }
 
             return this;
@@ -81,16 +81,16 @@ namespace Data.Specifications
         {
             if (property == null) throw new ArgumentNullException(nameof(property));
 
-            var isOrderBy = Modifers.LastOrDefault(m => m is IOrderedQueryable<TType>) != null;
+            var isOrderBy = Modifiers.LastOrDefault(m => m is IOrderedQueryable<TType>) != null;
             if (!isOrderBy)
             {
                 IOrderedQueryable<TType> orderByQuery(IQueryable<TType> q) => q.OrderByDescending(property);
-                Modifers.Add(orderByQuery);
+                Modifiers.Add(orderByQuery);
             }
             else
             {
                 IOrderedQueryable<TType> thenByQuery(IQueryable<TType> q) => ((IOrderedQueryable<TType>)q).ThenByDescending(property);
-                Modifers.Add(thenByQuery);
+                Modifiers.Add(thenByQuery);
             }
             return this;
         }
@@ -112,7 +112,7 @@ namespace Data.Specifications
 
         public virtual IQueryable<TType> ApplyModifiers(IQueryable<TType> query)
         {
-            Modifers.ToList().ForEach(m => query = m(query));
+            Modifiers.ToList().ForEach(m => query = m(query));
             return query;
         }
 
