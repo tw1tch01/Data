@@ -9,6 +9,7 @@ namespace Data.Common
             Page = page;
             PageSize = pageSize;
             PageCount = (items.Count + totalRecords - 1) / pageSize;
+            TotalRecords = totalRecords;
             Items = items;
         }
 
