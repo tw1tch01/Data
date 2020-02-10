@@ -109,13 +109,8 @@ namespace Data.Repositories
             Task<int> totalRecordsResolver(IQueryable<TEntity> query) => primaryKeyExpression == null ? query.CountAsync() : query.Select(primaryKeyExpression).CountAsync();
             Func<IQueryable<TEntity>, IQueryable<TEntity>> paginationResolverFunction() => a => a.Skip(page * pageSize).Take(pageSize);
 
-            var totalRecordsTask = QueryAsync(specification, totalRecordsResolver);
-            var pagedEntitiesTask = ListAsync(specification.AddQuery(paginationResolverFunction()));
-
-            await Task.WhenAll(totalRecordsTask, pagedEntitiesTask);
-
-            var totalRecords = await totalRecordsTask;
-            var pagedEntities = await pagedEntitiesTask;
+            var totalRecords = await QueryAsync(specification, totalRecordsResolver);
+            var pagedEntities = await ListAsync(specification.AddQuery(paginationResolverFunction()));
 
             return new PagedCollection<TEntity>(page, pageSize, totalRecords, pagedEntities);
         }
