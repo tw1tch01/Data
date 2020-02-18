@@ -8,7 +8,7 @@ namespace Data.Common
         {
             Page = page;
             PageSize = pageSize;
-            PageCount = (items.Count + totalRecords - 1) / pageSize;
+            PageCount = totalRecords < pageSize ? 1 : (items.Count + totalRecords - 1) / pageSize;
             TotalRecords = totalRecords;
             Items = items;
         }

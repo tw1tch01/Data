@@ -32,6 +32,7 @@ namespace Data.UnitTests.Common
         [TestCase(50, 100, 50, 2)]
         [TestCase(200, 200, 200, 1)]
         [TestCase(10, 150, 1, 15)]
+        [TestCase(200, 1, 1, 1)]
         public void PageCount_IsCalculatedCorrectly(int pageSize, int totalRecords, int itemCount, int expected)
         {
             var page = 0;
