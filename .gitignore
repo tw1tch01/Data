@@ -1,0 +1,7 @@
+/.vs/*
+/Data/bin/*
+/Data/obj/*
+/Data.IntegrationTests/bin/*
+/Data.IntegrationTests/obj/*
+/Data.UnitTests/bin/*
+/Data.UnitTests/obj/*
