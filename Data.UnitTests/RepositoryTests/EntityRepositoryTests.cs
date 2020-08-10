@@ -14,15 +14,15 @@ using NUnit.Framework;
 namespace Data.UnitTests.RepositoryTests
 {
     [TestFixture]
-    public class ContextRepositoryTests
+    public class EntityRepositoryTests
     {
         #region AddAsync
 
         [Test]
         public void AddAsync_WhenObjectIsNull_ThrowsArgumentNullException()
         {
-            var contextRepo = new ContextRepository<IAuditedContext>(It.IsAny<IAuditedContext>(), It.IsAny<ILogger<IAuditedContext>>());
-            var exception = Assert.ThrowsAsync<ArgumentNullException>(() => contextRepo.AddAsync<object>(null));
+            var repository = new EntityRepository<IAuditedContext>(It.IsAny<IAuditedContext>(), It.IsAny<ILogger<IAuditedContext>>());
+            var exception = Assert.ThrowsAsync<ArgumentNullException>(() => repository.AddAsync<object>(null));
             Assert.AreEqual("Value cannot be null. (Parameter 'entity')", exception.Message);
         }
 
@@ -30,35 +30,35 @@ namespace Data.UnitTests.RepositoryTests
         public async Task AddAsync_WhenAddingObject_VerifyDbSetAddAsyncIsCalled()
         {
             var @object = new object();
-            var mockContext = new Mock<IAuditedContext>();
+            var mockRepository = new Mock<IAuditedContext>();
             var mockDbSet = new Mock<DbSet<object>>();
 
-            mockContext.Setup(a => a.Set<object>()).Returns(mockDbSet.Object);
+            mockRepository.Setup(a => a.Set<object>()).Returns(mockDbSet.Object);
 
-            var repository = new ContextRepository<IAuditedContext>(mockContext.Object, It.IsAny<ILogger<IAuditedContext>>());
+            var repository = new EntityRepository<IAuditedContext>(mockRepository.Object, It.IsAny<ILogger<IAuditedContext>>());
 
             await repository.AddAsync(@object);
 
             Assert.Multiple(() =>
             {
                 mockDbSet.Verify(a => a.AddAsync(@object, It.IsAny<CancellationToken>()), Times.Once);
-                mockContext.Verify(c => c.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Never, "Context should never saved.");
+                mockRepository.Verify(c => c.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Never, "Context should never saved.");
             });
         }
 
         [Test]
         public void AddRangeAsync_WhenObjectCollectionIsNull_ThrowsArgumentNullException()
         {
-            var contextRepo = new ContextRepository<IAuditedContext>(It.IsAny<IAuditedContext>(), It.IsAny<ILogger<IAuditedContext>>());
-            var exception = Assert.ThrowsAsync<ArgumentNullException>(() => contextRepo.AddRangeAsync<object>(null));
+            var repository = new EntityRepository<IAuditedContext>(It.IsAny<IAuditedContext>(), It.IsAny<ILogger<IAuditedContext>>());
+            var exception = Assert.ThrowsAsync<ArgumentNullException>(() => repository.AddRangeAsync<object>(null));
             Assert.AreEqual("Value cannot be null. (Parameter 'entities')", exception.Message);
         }
 
         [Test]
         public void AddRangeAsync_WhenObjectCollectionIsEmpty_ThrowsArgumentException()
         {
-            var contextRepo = new ContextRepository<IAuditedContext>(It.IsAny<IAuditedContext>(), It.IsAny<ILogger<IAuditedContext>>());
-            var exception = Assert.ThrowsAsync<ArgumentException>(() => contextRepo.AddRangeAsync(new List<object>()));
+            var repository = new EntityRepository<IAuditedContext>(It.IsAny<IAuditedContext>(), It.IsAny<ILogger<IAuditedContext>>());
+            var exception = Assert.ThrowsAsync<ArgumentException>(() => repository.AddRangeAsync(new List<object>()));
             Assert.AreEqual("Cannot add an empty collection. (Parameter 'entities')", exception.Message);
         }
 
@@ -66,19 +66,19 @@ namespace Data.UnitTests.RepositoryTests
         public async Task AddRangeAsync_WhenAddingCollection_VerifyDbSetAddRangeAsyncIsCalled()
         {
             var objects = new List<object> { new object() };
-            var mockContext = new Mock<IAuditedContext>();
+            var mockRepository = new Mock<IAuditedContext>();
             var mockDbSet = new Mock<DbSet<object>>();
 
-            mockContext.Setup(a => a.Set<object>()).Returns(mockDbSet.Object);
+            mockRepository.Setup(a => a.Set<object>()).Returns(mockDbSet.Object);
 
-            var repository = new ContextRepository<IAuditedContext>(mockContext.Object, It.IsAny<ILogger<IAuditedContext>>());
+            var repository = new EntityRepository<IAuditedContext>(mockRepository.Object, It.IsAny<ILogger<IAuditedContext>>());
 
             await repository.AddRangeAsync(objects);
 
             Assert.Multiple(() =>
             {
                 mockDbSet.Verify(a => a.AddRangeAsync(objects, It.IsAny<CancellationToken>()), Times.Once);
-                mockContext.Verify(c => c.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Never, "Context should never saved.");
+                mockRepository.Verify(c => c.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Never, "Context should never saved.");
             });
         }
 
@@ -89,8 +89,8 @@ namespace Data.UnitTests.RepositoryTests
         [Test]
         public void Attach_WhenObjectIsNull_ThrowsArgumentNullException()
         {
-            var contextRepo = new ContextRepository<IAuditedContext>(It.IsAny<IAuditedContext>(), It.IsAny<ILogger<IAuditedContext>>());
-            var exception = Assert.Throws<ArgumentNullException>(() => contextRepo.Attach<object>(null));
+            var repository = new EntityRepository<IAuditedContext>(It.IsAny<IAuditedContext>(), It.IsAny<ILogger<IAuditedContext>>());
+            var exception = Assert.Throws<ArgumentNullException>(() => repository.Attach<object>(null));
             Assert.AreEqual("Value cannot be null. (Parameter 'entity')", exception.Message);
         }
 
@@ -98,35 +98,35 @@ namespace Data.UnitTests.RepositoryTests
         public void Attach_WhenAttachingObject_VerifyDbSetAttachIsCalled()
         {
             var @object = new object();
-            var mockContext = new Mock<IAuditedContext>();
+            var mockRepository = new Mock<IAuditedContext>();
             var mockDbSet = new Mock<DbSet<object>>();
 
-            mockContext.Setup(a => a.Set<object>()).Returns(mockDbSet.Object);
+            mockRepository.Setup(a => a.Set<object>()).Returns(mockDbSet.Object);
 
-            var repository = new ContextRepository<IAuditedContext>(mockContext.Object, It.IsAny<ILogger<IAuditedContext>>());
+            var repository = new EntityRepository<IAuditedContext>(mockRepository.Object, It.IsAny<ILogger<IAuditedContext>>());
 
             repository.Attach(@object);
 
             Assert.Multiple(() =>
             {
                 mockDbSet.Verify(a => a.Attach(@object), Times.Once);
-                mockContext.Verify(c => c.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Never, "Context should never saved.");
+                mockRepository.Verify(c => c.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Never, "Context should never saved.");
             });
         }
 
         [Test]
         public void AttachRange_WhenObjectCollectionIsNull_ThrowsArgumentNullException()
         {
-            var contextRepo = new ContextRepository<IAuditedContext>(It.IsAny<IAuditedContext>(), It.IsAny<ILogger<IAuditedContext>>());
-            var exception = Assert.Throws<ArgumentNullException>(() => contextRepo.AttachRange<object>(null));
+            var repository = new EntityRepository<IAuditedContext>(It.IsAny<IAuditedContext>(), It.IsAny<ILogger<IAuditedContext>>());
+            var exception = Assert.Throws<ArgumentNullException>(() => repository.AttachRange<object>(null));
             Assert.AreEqual("Value cannot be null. (Parameter 'entities')", exception.Message);
         }
 
         [Test]
         public void AttachRange_WhenObjectCollectionIsEmpty_ThrowsArgumentException()
         {
-            var contextRepo = new ContextRepository<IAuditedContext>(It.IsAny<IAuditedContext>(), It.IsAny<ILogger<IAuditedContext>>());
-            var exception = Assert.Throws<ArgumentException>(() => contextRepo.AttachRange(new List<object>()));
+            var repository = new EntityRepository<IAuditedContext>(It.IsAny<IAuditedContext>(), It.IsAny<ILogger<IAuditedContext>>());
+            var exception = Assert.Throws<ArgumentException>(() => repository.AttachRange(new List<object>()));
             Assert.AreEqual("Cannot attach an empty collection. (Parameter 'entities')", exception.Message);
         }
 
@@ -134,19 +134,19 @@ namespace Data.UnitTests.RepositoryTests
         public void AttachRange_WhenAttachingCollection_VerifyDbSetAttachRangeIsCalled()
         {
             var objects = new List<object> { new object() };
-            var mockContext = new Mock<IAuditedContext>();
+            var mockRepository = new Mock<IAuditedContext>();
             var mockDbSet = new Mock<DbSet<object>>();
 
-            mockContext.Setup(a => a.Set<object>()).Returns(mockDbSet.Object);
+            mockRepository.Setup(a => a.Set<object>()).Returns(mockDbSet.Object);
 
-            var repository = new ContextRepository<IAuditedContext>(mockContext.Object, It.IsAny<ILogger<IAuditedContext>>());
+            var repository = new EntityRepository<IAuditedContext>(mockRepository.Object, It.IsAny<ILogger<IAuditedContext>>());
 
             repository.AttachRange(objects);
 
             Assert.Multiple(() =>
             {
                 mockDbSet.Verify(a => a.AttachRange(objects), Times.Once);
-                mockContext.Verify(c => c.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Never, "Context should never saved.");
+                mockRepository.Verify(c => c.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Never, "Context should never saved.");
             });
         }
 
@@ -157,20 +157,20 @@ namespace Data.UnitTests.RepositoryTests
         [Test]
         public void FindByPrimaryKeyAsync_WhenPrimaryKeyIsNull_ThrowsArgumentNullException()
         {
-            var contextRepo = new ContextRepository<IAuditedContext>(It.IsAny<IAuditedContext>(), It.IsAny<ILogger<IAuditedContext>>());
-            var exception = Assert.ThrowsAsync<ArgumentNullException>(() => contextRepo.FindByPrimaryKeyAsync<object, object>(null));
+            var repository = new EntityRepository<IAuditedContext>(It.IsAny<IAuditedContext>(), It.IsAny<ILogger<IAuditedContext>>());
+            var exception = Assert.ThrowsAsync<ArgumentNullException>(() => repository.FindByPrimaryKeyAsync<object, object>(null));
             Assert.AreEqual("Value cannot be null. (Parameter 'primaryKey')", exception.Message);
         }
 
         [Test]
         public async Task FindByPrimaryKeyAsync_VerifyDbSetFindAsyncIsCalled()
         {
-            var mockContext = new Mock<IAuditedContext>();
+            var mockRepository = new Mock<IAuditedContext>();
             var mockDbSet = new Mock<DbSet<object>>();
 
-            mockContext.Setup(a => a.Set<object>()).Returns(mockDbSet.Object);
+            mockRepository.Setup(a => a.Set<object>()).Returns(mockDbSet.Object);
 
-            var repository = new ContextRepository<IAuditedContext>(mockContext.Object, It.IsAny<ILogger<IAuditedContext>>());
+            var repository = new EntityRepository<IAuditedContext>(mockRepository.Object, It.IsAny<ILogger<IAuditedContext>>());
 
             await repository.FindByPrimaryKeyAsync<object, int>(1);
 
@@ -184,8 +184,8 @@ namespace Data.UnitTests.RepositoryTests
         [Test]
         public void GetAsync_WhenSpecificationIsNull_ThrowsArgumentNullException()
         {
-            var contextRepo = new ContextRepository<IAuditedContext>(It.IsAny<IAuditedContext>(), It.IsAny<ILogger<IAuditedContext>>());
-            var exception = Assert.ThrowsAsync<ArgumentNullException>(() => contextRepo.GetAsync<object>(null));
+            var repository = new EntityRepository<IAuditedContext>(It.IsAny<IAuditedContext>(), It.IsAny<ILogger<IAuditedContext>>());
+            var exception = Assert.ThrowsAsync<ArgumentNullException>(() => repository.GetAsync<object>(null));
             Assert.AreEqual("Value cannot be null. (Parameter 'specification')", exception.Message);
         }
 
@@ -196,8 +196,8 @@ namespace Data.UnitTests.RepositoryTests
         [Test]
         public void SingleAsync_WhenSpecificationIsNull_ThrowsArgumentNullException()
         {
-            var contextRepo = new ContextRepository<IAuditedContext>(It.IsAny<IAuditedContext>(), It.IsAny<ILogger<IAuditedContext>>());
-            var exception = Assert.ThrowsAsync<ArgumentNullException>(() => contextRepo.SingleAsync<object>(null));
+            var repository = new EntityRepository<IAuditedContext>(It.IsAny<IAuditedContext>(), It.IsAny<ILogger<IAuditedContext>>());
+            var exception = Assert.ThrowsAsync<ArgumentNullException>(() => repository.SingleAsync<object>(null));
             Assert.AreEqual("Value cannot be null. (Parameter 'specification')", exception.Message);
         }
 
@@ -208,8 +208,8 @@ namespace Data.UnitTests.RepositoryTests
         [Test]
         public void ListAsync_WhenSpecificationIsNull_ThrowsArgumentNullException()
         {
-            var contextRepo = new ContextRepository<IAuditedContext>(It.IsAny<IAuditedContext>(), It.IsAny<ILogger<IAuditedContext>>());
-            var exception = Assert.ThrowsAsync<ArgumentNullException>(() => contextRepo.ListAsync<object>(null));
+            var repository = new EntityRepository<IAuditedContext>(It.IsAny<IAuditedContext>(), It.IsAny<ILogger<IAuditedContext>>());
+            var exception = Assert.ThrowsAsync<ArgumentNullException>(() => repository.ListAsync<object>(null));
             Assert.AreEqual("Value cannot be null. (Parameter 'specification')", exception.Message);
         }
 
@@ -220,8 +220,8 @@ namespace Data.UnitTests.RepositoryTests
         [Test]
         public void PagedListAsync_WhenSpecificationIsNull_ThrowsArgumentNullException()
         {
-            var contextRepo = new ContextRepository<IAuditedContext>(It.IsAny<IAuditedContext>(), It.IsAny<ILogger<IAuditedContext>>());
-            var exception = Assert.ThrowsAsync<ArgumentNullException>(() => contextRepo.PagedListAsync<object>(0, 0, null));
+            var repository = new EntityRepository<IAuditedContext>(It.IsAny<IAuditedContext>(), It.IsAny<ILogger<IAuditedContext>>());
+            var exception = Assert.ThrowsAsync<ArgumentNullException>(() => repository.PagedListAsync<object>(0, 0, null));
             Assert.AreEqual("Value cannot be null. (Parameter 'specification')", exception.Message);
         }
 
@@ -229,8 +229,8 @@ namespace Data.UnitTests.RepositoryTests
         public void PagedListAsync_WhenPageIsLessThanZero_ThrowsArgumentException()
         {
             var mockSpecification = new Mock<LinqSpecification<object>>();
-            var contextRepo = new ContextRepository<IAuditedContext>(It.IsAny<IAuditedContext>(), It.IsAny<ILogger<IAuditedContext>>());
-            var exception = Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => contextRepo.PagedListAsync(-1, 0, mockSpecification.Object));
+            var repository = new EntityRepository<IAuditedContext>(It.IsAny<IAuditedContext>(), It.IsAny<ILogger<IAuditedContext>>());
+            var exception = Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => repository.PagedListAsync(-1, 0, mockSpecification.Object));
             Assert.AreEqual("Specified argument was out of the range of valid values. (Parameter 'page')", exception.Message);
         }
 
@@ -239,8 +239,8 @@ namespace Data.UnitTests.RepositoryTests
         public void PagedListAsync_WhenPageSizeIsLessThanOrEqualToZero_ThrowsArgumentException(int pageSize)
         {
             var mockSpecification = new Mock<LinqSpecification<object>>();
-            var contextRepo = new ContextRepository<IAuditedContext>(It.IsAny<IAuditedContext>(), It.IsAny<ILogger<IAuditedContext>>());
-            var exception = Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => contextRepo.PagedListAsync(0, pageSize, mockSpecification.Object));
+            var repository = new EntityRepository<IAuditedContext>(It.IsAny<IAuditedContext>(), It.IsAny<ILogger<IAuditedContext>>());
+            var exception = Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => repository.PagedListAsync(0, pageSize, mockSpecification.Object));
             Assert.AreEqual("Specified argument was out of the range of valid values. (Parameter 'pageSize')", exception.Message);
         }
 
@@ -251,18 +251,18 @@ namespace Data.UnitTests.RepositoryTests
         [Test]
         public void QueryAsync_WhenSpecificationIsNull_ThrowsArgumentNullException()
         {
-            var contextRepo = new ContextRepository<IAuditedContext>(It.IsAny<IAuditedContext>(), It.IsAny<ILogger<IAuditedContext>>());
+            var repository = new EntityRepository<IAuditedContext>(It.IsAny<IAuditedContext>(), It.IsAny<ILogger<IAuditedContext>>());
             var resolver = It.IsAny<Func<IQueryable<object>, Task<object>>>();
-            var exception = Assert.ThrowsAsync<ArgumentNullException>(() => contextRepo.QueryAsync(null, resolver));
+            var exception = Assert.ThrowsAsync<ArgumentNullException>(() => repository.QueryAsync(null, resolver));
             Assert.AreEqual("Value cannot be null. (Parameter 'specification')", exception.Message);
         }
 
         [Test]
         public void QueryAsync_WhenResolverIsNull_ThrowsArgumentNullException()
         {
-            var contextRepo = new ContextRepository<IAuditedContext>(It.IsAny<IAuditedContext>(), It.IsAny<ILogger<IAuditedContext>>());
+            var repository = new EntityRepository<IAuditedContext>(It.IsAny<IAuditedContext>(), It.IsAny<ILogger<IAuditedContext>>());
             var mockLinqSpecificaiton = new Mock<LinqSpecification<object>>();
-            var exception = Assert.ThrowsAsync<ArgumentNullException>(() => contextRepo.QueryAsync<object, object>(mockLinqSpecificaiton.Object, null));
+            var exception = Assert.ThrowsAsync<ArgumentNullException>(() => repository.QueryAsync<object, object>(mockLinqSpecificaiton.Object, null));
             Assert.AreEqual("Value cannot be null. (Parameter 'resolver')", exception.Message);
         }
 
@@ -273,24 +273,24 @@ namespace Data.UnitTests.RepositoryTests
         [Test]
         public void Remove_WhenObjectIsNull_ThrowsArgumentNullException()
         {
-            var contextRepo = new ContextRepository<IAuditedContext>(It.IsAny<IAuditedContext>(), It.IsAny<ILogger<IAuditedContext>>());
-            var exception = Assert.Throws<ArgumentNullException>(() => contextRepo.Remove((object)null));
+            var repository = new EntityRepository<IAuditedContext>(It.IsAny<IAuditedContext>(), It.IsAny<ILogger<IAuditedContext>>());
+            var exception = Assert.Throws<ArgumentNullException>(() => repository.Remove((object)null));
             Assert.AreEqual("Value cannot be null. (Parameter 'entity')", exception.Message);
         }
 
         [Test]
         public void Remove_WhenObjectCollectionIsNull_ThrowsArgumentNullException()
         {
-            var contextRepo = new ContextRepository<IAuditedContext>(It.IsAny<IAuditedContext>(), It.IsAny<ILogger<IAuditedContext>>());
-            var exception = Assert.Throws<ArgumentNullException>(() => contextRepo.RemoveRange((ICollection<object>)null));
+            var repository = new EntityRepository<IAuditedContext>(It.IsAny<IAuditedContext>(), It.IsAny<ILogger<IAuditedContext>>());
+            var exception = Assert.Throws<ArgumentNullException>(() => repository.RemoveRange((ICollection<object>)null));
             Assert.AreEqual("Value cannot be null. (Parameter 'entities')", exception.Message);
         }
 
         [Test]
         public void Remove_WhenObjectCollectionIsEmpty_ThrowsArgumentException()
         {
-            var contextRepo = new ContextRepository<IAuditedContext>(It.IsAny<IAuditedContext>(), It.IsAny<ILogger<IAuditedContext>>());
-            var exception = Assert.Throws<ArgumentException>(() => contextRepo.RemoveRange<object>(new List<object>()));
+            var repository = new EntityRepository<IAuditedContext>(It.IsAny<IAuditedContext>(), It.IsAny<ILogger<IAuditedContext>>());
+            var exception = Assert.Throws<ArgumentException>(() => repository.RemoveRange<object>(new List<object>()));
             Assert.AreEqual("Cannot remove an empty collection. (Parameter 'entities')", exception.Message);
         }
 
@@ -298,19 +298,19 @@ namespace Data.UnitTests.RepositoryTests
         public void Remove_WhenRemovingObject_VerifyDbSetRemoveIsCalled()
         {
             var @object = new object();
-            var mockContext = new Mock<IAuditedContext>();
+            var mockRepository = new Mock<IAuditedContext>();
             var mockDbSet = new Mock<DbSet<object>>();
 
-            mockContext.Setup(a => a.Set<object>()).Returns(mockDbSet.Object);
+            mockRepository.Setup(a => a.Set<object>()).Returns(mockDbSet.Object);
 
-            var repository = new ContextRepository<IAuditedContext>(mockContext.Object, It.IsAny<ILogger<IAuditedContext>>());
+            var repository = new EntityRepository<IAuditedContext>(mockRepository.Object, It.IsAny<ILogger<IAuditedContext>>());
 
             repository.Remove(@object);
 
             Assert.Multiple(() =>
             {
                 mockDbSet.Verify(a => a.Remove(@object), Times.Once);
-                mockContext.Verify(c => c.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Never, "Context should never saved.");
+                mockRepository.Verify(c => c.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Never, "Context should never saved.");
             });
         }
 
@@ -318,19 +318,19 @@ namespace Data.UnitTests.RepositoryTests
         public void RemoveRange_WhenRemovingCollection_VerifyDbSetRemoveRangeIsCalled()
         {
             var objects = new List<object> { new object() };
-            var mockContext = new Mock<IAuditedContext>();
+            var mockRepository = new Mock<IAuditedContext>();
             var mockDbSet = new Mock<DbSet<object>>();
 
-            mockContext.Setup(a => a.Set<object>()).Returns(mockDbSet.Object);
+            mockRepository.Setup(a => a.Set<object>()).Returns(mockDbSet.Object);
 
-            var repository = new ContextRepository<IAuditedContext>(mockContext.Object, It.IsAny<ILogger<IAuditedContext>>());
+            var repository = new EntityRepository<IAuditedContext>(mockRepository.Object, It.IsAny<ILogger<IAuditedContext>>());
 
             repository.RemoveRange(objects);
 
             Assert.Multiple(() =>
             {
                 mockDbSet.Verify(a => a.RemoveRange(objects), Times.Once);
-                mockContext.Verify(c => c.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Never, "Context should never saved.");
+                mockRepository.Verify(c => c.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Never, "Context should never saved.");
             });
         }
 

@@ -7,9 +7,9 @@ namespace Data.IntegrationTests
 {
     internal class RepositoryFactory
     {
-        public static ContextRepository<IAuditedContext> Create(IAuditedContext context)
+        public static EntityRepository<IAuditedContext> Create(IAuditedContext context)
         {
-            return new ContextRepository<IAuditedContext>(context, new Mock<ILogger<IAuditedContext>>().Object);
+            return new EntityRepository<IAuditedContext>(context, new Mock<ILogger<IAuditedContext>>().Object);
         }
     }
 }

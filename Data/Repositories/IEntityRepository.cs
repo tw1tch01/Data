@@ -9,7 +9,7 @@ using Data.Specifications;
 
 namespace Data.Repositories
 {
-    public interface IContextRepository<TContext> where TContext : IAuditedContext
+    public interface IEntityRepository<TContext> where TContext : IAuditedContext
     {
         Task AddAsync<TEntity>(TEntity entity) where TEntity : class;
 

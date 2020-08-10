@@ -18,7 +18,7 @@ using NUnit.Framework;
 namespace Data.IntegrationTests.RepositoryTests
 {
     [TestFixture]
-    internal class ContextRepositoryTests : MemoryDbSetupFixture
+    internal class EntityRepositoryTests : MemoryDbSetupFixture
     {
         private readonly Fixture _fixture = new Fixture();
         private AuditedEntity _entity;
@@ -127,7 +127,7 @@ namespace Data.IntegrationTests.RepositoryTests
         {
             using (var context = new MemoryContext())
             {
-                var repo = new ContextRepository<MemoryContext>(context, It.IsAny<ILogger<IAuditedContext>>());
+                var repo = new EntityRepository<MemoryContext>(context, It.IsAny<ILogger<IAuditedContext>>());
 
                 var entity = await repo.FindByPrimaryKeyAsync<AuditedEntity, Guid>(It.IsAny<Guid>());
 

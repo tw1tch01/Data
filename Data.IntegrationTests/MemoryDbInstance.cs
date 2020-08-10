@@ -13,7 +13,7 @@ namespace Data.IntegrationTests
         }
 
         public MemoryContext Context { get; private set; }
-        public ContextRepository<IAuditedContext> Repository { get; private set; }
+        public EntityRepository<IAuditedContext> Repository { get; private set; }
 
         public void Dispose()
         {

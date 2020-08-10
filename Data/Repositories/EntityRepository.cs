@@ -15,7 +15,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Data.Repositories
 {
-    public class ContextRepository<TContext> : IContextRepository<TContext> where TContext : IAuditedContext
+    public class EntityRepository<TContext> : IEntityRepository<TContext> where TContext : IAuditedContext
     {
         #region Fields
 
@@ -27,7 +27,7 @@ namespace Data.Repositories
 
         #region Constructor
 
-        public ContextRepository(TContext dataContext, ILogger<IAuditedContext> logger)
+        public EntityRepository(TContext dataContext, ILogger<IAuditedContext> logger)
         {
             _dataContext = dataContext;
             _logger = logger;

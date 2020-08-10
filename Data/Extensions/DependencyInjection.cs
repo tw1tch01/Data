@@ -7,7 +7,7 @@ namespace Data.Extensions
     {
         public static IServiceCollection AddDataDependencies(this IServiceCollection services)
         {
-            services.AddTransient(typeof(IContextRepository<>), typeof(ContextRepository<>));
+            services.AddTransient(typeof(IEntityRepository<>), typeof(EntityRepository<>));
             services.AddLogging();
 
             return services;
